@@ -1,18 +1,89 @@
-# React + Vite
+# 🍽️ Local Food Lovers Network
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A community-driven MERN platform where food lovers can share their local food experiences, post reviews with photos, discover trending dishes, and connect with nearby food enthusiasts.
 
-Currently, two official plugins are available:
+# 🌐 Live Site:https://sparkly-creponne-572d5c.netlify.app/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+# 🖼️ Project Overview
 
-## React Compiler
+Local Food Lovers Network is a full-stack web application designed for food enthusiasts who enjoy exploring restaurants, street foods, and homemade dishes. Users can register, post reviews, manage their favorites, and view reviews from others in an engaging and responsive UI.
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+# 🚀 Tech Stack
+## Frontend
 
-Note: This will impact Vite dev & build performances.
+- React
 
-## Expanding the ESLint configuration
+- React Router
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- Firebase Authentication
+
+- Tailwind CSS
+
+- React Hook Form
+
+# Backend
+
+- Node.js
+
+- Express.js
+
+- MongoDB 
+
+- CORS
+
+  
+# ⭐ Main Features
+
+- 🔐 Firebase Authentication (Email/Password + Google login)
+
+- 📝 Add, Edit & Delete Reviews (Protected routes)
+
+- ⭐ Top Reviews Section on Home (Dynamic)
+
+- ❤️ Favorite System (Add/remove favorites, stored in DB)
+
+- 🔍 Search Reviews by Food Name (MongoDB $regex)
+
+- 📸 Image-based review cards
+
+- 📱 Fully Responsive UI (Mobile, Tablet, Desktop)
+
+- 🧭 Private Route Persistence (No logout on reload)
+
+- 🌀 Loading Spinner & Skeleton
+
+- ❌ 404 Page with a fun image
+
+- 🔁 Hero Slider + Extra Sections
+
+
+# 📦 Dependencies
+## Client
+
+- react
+
+- react-router-dom
+
+- firebase
+
+- react-hook-form
+
+- react-icons
+
+- sweetalert2
+
+-  react-hot-toast
+
+- swiper 
+
+- tailwindcss
+
+## Server
+
+- express
+
+- mongodb 
+
+- cors
+
+- dotenv
