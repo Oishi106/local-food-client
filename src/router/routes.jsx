@@ -14,6 +14,7 @@ import UpdateReview from "../Pages/UpdateReview/UpdateReview";
 import FoodDetails from "../Pages/FoodDetails/FoodDetails";
 import AllReviews from "../Pages/AllReviews";
 import MyReviews from "../Pages/MyReviews/MyReviews";
+import MyFavourites from "../Pages/MyFavourites/MyFavourites";
 
 export const router = createBrowserRouter([
   {
@@ -74,6 +75,14 @@ export const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <MyReviews></MyReviews>
+          </PrivateRoute>
+        ),
+      },
+       {
+        path: "/my-favourites",
+        element: (
+          <PrivateRoute>
+            <MyFavourites></MyFavourites>
           </PrivateRoute>
         ),
       },

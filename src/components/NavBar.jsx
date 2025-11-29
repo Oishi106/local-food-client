@@ -23,8 +23,10 @@ const NavBar = () => {
     setTheme(checked ? "dark" : "light")
   }
   return (
+  
     <div className="
      navbar py-0 min-h-0 z-1 shadow-sm rounded-full bg-amber-50 max-w-7xl">
+  
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost md:hidden">

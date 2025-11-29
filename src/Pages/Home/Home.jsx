@@ -16,7 +16,7 @@ const Home = () => {
                 <p className="text-lg text-gray-600 max-w-3xl mx-auto mb-2 animate-fade-in">
                     Discover authentic local cuisines, connect with passionate home cooks, and experience food like never before.
                 </p>
-                <div className="h-1 w-32 bg-gradient-to-r from-orange-400 to-green-400 mx-auto rounded-full"></div>
+                <div className="h-1 mt-5 w-32 bg-gradient-to-r from-orange-400 to-green-400 mx-auto rounded-full"></div>
             </section>
 
             {/* Features  */}
@@ -59,7 +59,7 @@ const Home = () => {
             
             {/* How it works */}
             <section className="max-w-6xl mx-auto mt-12 px-4">
-                <h2 className="text-3xl font-bold text-cyan-900 mb-6">How It Works</h2>
+                <h2 className="text-3xl font-bold text-cyan-900 mb-6">How It Works :</h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="p-6 bg-gradient-to-r from-white to-cyan-50 rounded-lg shadow-sm border transition-all duration-300 hover:shadow-xl hover:-translate-y-2 cursor-pointer group">
                         <div className="w-12 h-12 rounded-full bg-cyan-600 text-white flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg">1</div>
