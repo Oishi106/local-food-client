@@ -1,14 +1,14 @@
-# 🍽️ Local Food Lovers Network
+## 🍽️ Local Food Lovers Network
 
 A community-driven MERN platform where food lovers can share their local food experiences, post reviews with photos, discover trending dishes, and connect with nearby food enthusiasts.
 
-# 🌐 Live Site:https://sparkly-creponne-572d5c.netlify.app/
+## 🌐 Live Site:(https://local-food-reviewb496e2.netlify.app/)
 
-# 🖼️ Project Overview
+## 🖼️ Project Overview
 
 Local Food Lovers Network is a full-stack web application designed for food enthusiasts who enjoy exploring restaurants, street foods, and homemade dishes. Users can register, post reviews, manage their favorites, and view reviews from others in an engaging and responsive UI.
 
-# 🚀 Tech Stack
+## 🚀 Tech Stack
 ## Frontend
 
 - React
@@ -21,7 +21,7 @@ Local Food Lovers Network is a full-stack web application designed for food enth
 
 - React Hook Form
 
-# Backend
+## Backend
 
 - Node.js
 
@@ -32,7 +32,7 @@ Local Food Lovers Network is a full-stack web application designed for food enth
 - CORS
 
   
-# ⭐ Main Features
+## ⭐ Main Features
 
 - 🔐 Firebase Authentication (Email/Password + Google login)
 
@@ -57,8 +57,8 @@ Local Food Lovers Network is a full-stack web application designed for food enth
 - 🔁 Hero Slider + Extra Sections
 
 
-# 📦 Dependencies
-## Client
+## 📦 Dependencies
+### Client
 
 - react
 
@@ -78,7 +78,7 @@ Local Food Lovers Network is a full-stack web application designed for food enth
 
 - tailwindcss
 
-## Server
+### Server
 
 - express
 
