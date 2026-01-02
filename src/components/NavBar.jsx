@@ -75,8 +75,8 @@ const NavBar = () => {
         </div>
         <Link to={"/"} className="flex items-center gap-1 text-xl font-bold">
           <img className="w-[70px]" src="/lo.png" alt="" />
-          <h2 className="text-[22px] text-cyan-950 inline">
-            Local Food 
+          <h2 className="text-[30px] text-cyan-950 inline">
+            FoodNest 
           </h2>
         </Link>
       </div>
