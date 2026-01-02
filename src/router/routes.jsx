@@ -15,6 +15,7 @@ import FoodDetails from "../Pages/FoodDetails/FoodDetails";
 import AllReviews from "../Pages/AllReviews";
 import MyReviews from "../Pages/MyReviews/MyReviews";
 import MyFavourites from "../Pages/MyFavourites/MyFavourites";
+import About from "../Pages/About/About";
 
 export const router = createBrowserRouter([
   {
@@ -34,6 +35,10 @@ export const router = createBrowserRouter([
         path: "/all-items",
         element: <AllItems></AllItems>,
         loader: () => fetch('http://localhost:3000/details')
+      },
+      {
+        path: "/about",
+        element: <About />,
       },
       {
         path: "/profile",
