@@ -82,7 +82,7 @@ const AllItems = () => {
       </label>
       <button 
         type="submit"
-        className="btn text-white bg-gradient-to-r from-cyan-900 to-indigo-600 hover:from-cyan-800 hover:to-indigo-700 rounded-full"
+        className="btn text-white bg-linear-to-r from-cyan-900 to-indigo-600 hover:from-cyan-800 hover:to-indigo-700 rounded-full"
         disabled={loading}
       >
         {loading ? "Searching..." : "Search"}
@@ -91,7 +91,7 @@ const AllItems = () => {
         <button 
           type="button"
           onClick={handleClearSearch}
-          className="btn text-white bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 rounded-full"
+          className="btn text-white bg-linear-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 rounded-full"
         >
           Clear
         </button>

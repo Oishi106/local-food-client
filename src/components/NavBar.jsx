@@ -83,7 +83,7 @@ const NavBar = () => {
   );
 
   return (
-    <header className="sticky top-0 z-10">
+    <header className="sticky top-0 z-50 isolate">
       <div className="navbar h-20 bg-base-100/70 backdrop-blur-sm shadow-[0_4px_8px_rgba(0,0,0,0.1)] mb-0.5 p-3 md:px-10">
           <div className="navbar-start gap-2">
             <button

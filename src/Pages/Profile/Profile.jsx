@@ -12,7 +12,7 @@ const Profile = () => {
     "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=400";
 
   return (
-    <div className="min-h-[calc(100vh-80px)] bg-gradient-to-br from-cyan-50 via-white to-indigo-50 py-10 px-4">
+    <div className="min-h-[calc(100vh-80px)] bg-linear-to-br from-cyan-50 via-white to-indigo-50 py-10 px-4">
    
       <div className="max-w-5xl mx-auto mb-8">
         <h1 className="text-3xl md:text-4xl font-extrabold text-cyan-900 mb-2">
@@ -82,7 +82,7 @@ const Profile = () => {
 
 
         <div className="space-y-6">
-          <div className="bg-gradient-to-r from-cyan-900 to-indigo-500 text-white rounded-3xl p-6 shadow-xl">
+          <div className="bg-linear-to-r from-cyan-900 to-indigo-500 text-white rounded-3xl p-6 shadow-xl">
             <h3 className="text-lg font-semibold mb-2">Taste Profile</h3>
             <p className="text-sm text-white/90 mb-4">
               We use your reviews & favorites to understand what you love.

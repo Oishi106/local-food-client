@@ -1,8 +1,29 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
-const Reveal = ({ children, className = "" }) => {
+const Reveal = ({
+  children,
+  className = "",
+  direction = "up",
+  delay = 0,
+  threshold = 0.15,
+  once = true,
+}) => {
   const ref = useRef(null);
   const [visible, setVisible] = useState(false);
+
+  const hiddenTransformClass = useMemo(() => {
+    switch (direction) {
+      case "left":
+        return "-translate-x-6";
+      case "right":
+        return "translate-x-6";
+      case "down":
+        return "-translate-y-6";
+      case "up":
+      default:
+        return "translate-y-6";
+    }
+  }, [direction]);
 
   useEffect(() => {
     const element = ref.current;
@@ -12,23 +33,26 @@ const Reveal = ({ children, className = "" }) => {
       ([entry]) => {
         if (entry.isIntersecting) {
           setVisible(true);
-          observer.disconnect();
+          if (once) observer.disconnect();
+        } else if (!once) {
+          setVisible(false);
         }
       },
-      { threshold: 0.15 }
+      { threshold }
     );
 
     observer.observe(element);
     return () => observer.disconnect();
-  }, []);
+  }, [once, threshold]);
 
   return (
     <div
       ref={ref}
-      className={`${className} motion-safe:transition-all motion-safe:duration-700 motion-safe:ease-out motion-reduce:transition-none ${
+      style={{ transitionDelay: `${delay}ms` }}
+      className={`${className} motion-safe:transform-gpu will-change-transform motion-safe:transition-all motion-safe:duration-700 motion-safe:ease-out motion-reduce:transition-none ${
         visible
-          ? "opacity-100 translate-y-0"
-          : "opacity-0 translate-y-5"
+          ? "opacity-100 translate-x-0 translate-y-0 blur-0 scale-100"
+          : `opacity-0 ${hiddenTransformClass} blur-sm scale-95`
       }`}
     >
       {children}
