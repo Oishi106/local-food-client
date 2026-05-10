@@ -11,7 +11,7 @@ import {
   Truck,
   Utensils,
 } from "lucide-react";
-import { NavLink } from "react-router";
+import { NavLink } from "react-router-dom";
 import SectionHeader from "../../components/SectionHeader";
 
 const About = () => {

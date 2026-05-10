@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import {
   Facebook,
   Twitter,
@@ -22,7 +22,7 @@ const Footer = () => {
           </div>
           <ul className="space-y-2 mt-4">
             <li><Link to="/all-items" className="text-gray-800 hover:text-white transition">All Food Items</Link></li>
-            <li><Link to="/add-Review" className="text-gray-800 hover:text-white transition">Add Food</Link></li>
+            <li><Link to="/dashboard/overview" className="text-gray-800 hover:text-white transition">Dashboard</Link></li>
             <li><Link to="/profile" className="text-gray-800 hover:text-white transition">Profile</Link></li>
             <li><Link to="/auth/login" className="text-gray-800 hover:text-white transition">Login</Link></li>
           </ul>

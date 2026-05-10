@@ -1,21 +1,31 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "../layout/MainLayout";
+import DashboardLayout from "../layout/DashboardLayout";
 import Home from "../Pages/Home/Home";
 import Profile from "../Pages/Profile/Profile";
 import Login from "../Pages/Auth/Login";
 import Register from "../Pages/Auth/Registration";
 import PrivateRoute from "./PrivateRoute";
-import MyModels from "../Pages/MyReviews/MyReviews";
+import RoleRoute from "./RoleRoute";
 import MyDownloads from "../Pages/MyDownloads/MyDownloads";
-import ErrorPage from "../components/ErrorPage ";
-import AddReviews from "../Pages/AddReviews/AddReviews";
+import ErrorPage from "../components/ErrorPage";
 import AllItems from "../Pages/AllItems/AllItems";
-import UpdateReview from "../Pages/UpdateReview/UpdateReview";
 import FoodDetails from "../Pages/FoodDetails/FoodDetails";
 import AllReviews from "../Pages/AllReviews";
 import MyReviews from "../Pages/MyReviews/MyReviews";
 import MyFavourites from "../Pages/MyFavourites/MyFavourites";
 import About from "../Pages/About/About";
+import Overview from "../Pages/Dashboard/Overview";
+import MyBookings from "../Pages/Dashboard/MyBookings";
+import PaymentHistory from "../Pages/Dashboard/PaymentHistory";
+import MyReviewsDashboard from "../Pages/Dashboard/MyReviewsDashboard";
+import AddReviews from "../Pages/AddReviews/AddReviews";
+import UpdateReview from "../Pages/UpdateReview/UpdateReview";
+import AdminManageUsers from "../Pages/Dashboard/AdminManageUsers";
+import AdminManageProducts from "../Pages/Dashboard/AdminManageProducts";
+import AdminAllBookings from "../Pages/Dashboard/AdminAllBookings";
+import { API_BASE_URL } from "../utils/api";
+import { Navigate } from "react-router-dom";
 
 export const router = createBrowserRouter([
   {
@@ -50,20 +60,8 @@ export const router = createBrowserRouter([
       },
       {
         path: "/all-reviews",
-        element: (
-          <PrivateRoute>
-           <AllReviews></AllReviews>
-          </PrivateRoute>
-        ),
+        element: <AllReviews></AllReviews>,
         loader: () => fetch('http://localhost:3000/details')
-      },
-      {
-        path: "/add-Review",
-        element: (
-          <PrivateRoute>
-           <AddReviews></AddReviews>
-          </PrivateRoute>
-        ),
       },
       {
         path: "/item-details/:id",
@@ -100,16 +98,6 @@ export const router = createBrowserRouter([
           </PrivateRoute>
         ),
       },
-
-        {
-        path: "/update-review/:id",
-        element: (
-          <PrivateRoute>
-            <UpdateReview></UpdateReview>
-          </PrivateRoute>
-        ),
-          loader: ({params}) => fetch(`http://localhost:3000/details/${params.id}`)
-      },
       {
         path: "/auth/login",
         element: <Login />,
@@ -117,6 +105,98 @@ export const router = createBrowserRouter([
       {
         path: "/auth/register",
         element: <Register />,
+      },
+    ],
+  },
+  {
+    path: "/dashboard",
+    element: (
+      <PrivateRoute>
+        <DashboardLayout />
+      </PrivateRoute>
+    ),
+    children: [
+      {
+        index: true,
+        element: <Navigate to="/dashboard/overview" replace />,
+      },
+      {
+        path: "/dashboard/overview",
+        element: (
+          <RoleRoute allow={["user", "admin"]}>
+            <Overview />
+          </RoleRoute>
+        ),
+      },
+      {
+        path: "/dashboard/bookings",
+        element: (
+          <RoleRoute allow={["user"]}>
+            <MyBookings />
+          </RoleRoute>
+        ),
+      },
+      {
+        path: "/dashboard/payments",
+        element: (
+          <RoleRoute allow={["user"]}>
+            <PaymentHistory />
+          </RoleRoute>
+        ),
+      },
+      {
+        path: "/dashboard/reviews",
+        element: (
+          <RoleRoute allow={["user"]}>
+            <MyReviewsDashboard />
+          </RoleRoute>
+        ),
+      },
+      {
+        path: "/dashboard/reviews/add",
+        element: (
+          <RoleRoute allow={["user"]}>
+            <AddReviews />
+          </RoleRoute>
+        ),
+      },
+      {
+        path: "/dashboard/reviews/:id/edit",
+        element: (
+          <RoleRoute allow={["user"]}>
+            <UpdateReview />
+          </RoleRoute>
+        ),
+        loader: ({ params }) => fetch(`${API_BASE_URL}/details/${params.id}`),
+      },
+
+      {
+        path: "/dashboard/manage-users",
+        element: (
+          <RoleRoute allow={["admin"]}>
+            <AdminManageUsers />
+          </RoleRoute>
+        ),
+      },
+      {
+        path: "/dashboard/manage-products",
+        element: (
+          <RoleRoute allow={["admin"]}>
+            <AdminManageProducts />
+          </RoleRoute>
+        ),
+      },
+      {
+        path: "/dashboard/all-bookings",
+        element: (
+          <RoleRoute allow={["admin"]}>
+            <AdminAllBookings />
+          </RoleRoute>
+        ),
+      },
+      {
+        path: "*",
+        element: <ErrorPage />,
       },
     ],
   },

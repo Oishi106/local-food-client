@@ -1,10 +1,15 @@
-import { use } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { apiFetch } from "../../utils/api";
+import { DashboardDataContext } from "../../context/DashboardDataContext";
 
 const AddReviews = () => {
 
-  const { user } = use(AuthContext)
+  const { user } = useContext(AuthContext)
+  const navigate = useNavigate();
+  const { refresh } = useContext(DashboardDataContext);
 
 
   const handleSubmit = (e) => {
@@ -21,21 +26,19 @@ const AddReviews = () => {
       user: user.email
     }
 
-    fetch('http://localhost:3000/details', {
-       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData)
+    apiFetch('/details', {
+      method: "POST",
+      body: JSON.stringify(formData),
     })
-    .then(res => res.json())
-    .then(data=> {
-      toast.success("Successfully added!")
-      console.log(data)
-    })
-    .catch(err => {
-      console.log(err)
-    })
+      .then(() => {
+        toast.success("Successfully added!");
+        refresh();
+        navigate("/dashboard/reviews");
+      })
+      .catch((err) => {
+        console.log(err);
+        toast.error("Failed to add review");
+      });
    
 
   }

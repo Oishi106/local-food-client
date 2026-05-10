@@ -1,773 +1,604 @@
-import { useEffect, useState } from "react";
-import { NavLink, useLoaderData } from "react-router";
+import { useEffect, useRef, useState } from "react";
+import { NavLink, useLoaderData } from "react-router-dom";
 import Banner from "../../components/Banner";
 import { FoodCard } from "../../components/FoodCard";
 import Reveal from "../../components/Reveal";
 
-const SectionHeading = ({ title, description, align = "left" }) => (
-    <header className={`space-y-2 ${align === "center" ? "text-center" : "text-left"}`}>
-        <h2 className="text-3xl font-extrabold leading-tight text-[#EB4949] md:text-4xl">{title}</h2>
-        {description ? (
-            <p className="text-sm text-base-content/70 md:text-base">{description}</p>
-        ) : null}
-    </header>
+/* ─── Section Heading ─────────────────────────────── */
+const SectionHeading = ({ title, description, align = "left", accent }) => (
+  <header className={`space-y-2 ${align === "center" ? "text-center" : "text-left"}`}>
+    <h2 className="text-3xl font-extrabold leading-tight text-accent md:text-4xl">
+      {accent
+        ? <>{title} <span className="shimmer-text">{accent}</span></>
+        : title}
+    </h2>
+    {description && <p className="text-sm text-muted md:text-base">{description}</p>}
+  </header>
 );
 
+/* ─── Testimonial Carousel ───────────────────────── */
 const Carousel = () => {
-    const reviews = [
-        {
-            name: "Rafiul Karim",
-            location: "Dhaka, Bangladesh",
-            text: "FoodNest keeps listings fresh, reviews honest, and the experience smooth—my go-to for discovering local favourites across Dhaka.",
-            avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=300&h=300&fit=crop",
-        },
-        {
-            name: "Sumaiya Akter",
-            location: "Chattogram, Bangladesh",
-            text: "I trust the ratings and photos here. Finding great food and saving favourites makes re-ordering super easy.",
-            avatar: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=300&h=300&fit=crop",
-        },
-        {
-            name: "Jahid Hasan",
-            location: "Sylhet, Bangladesh",
-            text: "Adding reviews is simple and the community feedback is real. Best way to spot hidden gems near me.",
-            avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300&h=300&fit=crop",
-        },
-    ];
-
-    const [index, setIndex] = useState(0);
-
-    useEffect(() => {
-        const id = setInterval(() => {
-            setIndex((prev) => (prev + 1) % reviews.length);
-        }, 4500);
-        return () => clearInterval(id);
-    }, [reviews.length]);
-
-    const active = reviews[index];
-
-    return (
-        <div className="mt-10 rounded-3xl bg-white/80 p-8 md:p-10 shadow-lg relative overflow-hidden">
-            <div className="absolute inset-y-0 right-6 hidden h-full w-32 items-center justify-center opacity-15 lg:flex">
-                <span className="text-6xl">🍕</span>
-            </div>
-            <div className="grid gap-8 lg:grid-cols-[220px_1fr] items-center">
-                <div className="flex justify-center lg:justify-start">
-                    <img
-                        src={active.avatar}
-                        alt={active.name}
-                        className="h-32 w-32 rounded-full object-cover shadow-md"
-                        loading="lazy"
-                    />
-                </div>
-                <div className="space-y-4">
-                    <p className="text-lg leading-relaxed text-gray-800">“{active.text}”</p>
-                    <div className="space-y-1 text-gray-800">
-                        <div className="font-bold text-lg">{active.name}</div>
-                        <div className="text-sm text-gray-600">{active.location}</div>
-                    </div>
-                </div>
-            </div>
-
-            <div className="mt-8 flex items-center justify-start">
-                <div className="flex items-center gap-2">
-                    {reviews.map((_, idx) => (
-                        <button
-                            key={idx}
-                            aria-label={`Go to testimonial ${idx + 1}`}
-                            onClick={() => setIndex(idx)}
-                            className={`h-2.5 w-6 rounded-full transition-all ${idx === index ? "bg-[rgb(226,98,73)]" : "bg-gray-300"}`}
-                        />
-                    ))}
-                </div>
-            </div>
+  const reviews = [
+    { name: "Rafiul Karim", location: "Dhaka, Bangladesh", text: "FoodNest keeps listings fresh, reviews honest, and the experience smooth—my go-to for discovering local favourites across Dhaka.", avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=300&h=300&fit=crop", stars: 5 },
+    { name: "Sumaiya Akter", location: "Chattogram, Bangladesh", text: "I trust the ratings and photos here. Finding great food and saving favourites makes re-ordering super easy.", avatar: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=300&h=300&fit=crop", stars: 5 },
+    { name: "Jahid Hasan", location: "Sylhet, Bangladesh", text: "Adding reviews is simple and the community feedback is real. Best way to spot hidden gems near me.", avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300&h=300&fit=crop", stars: 5 },
+  ];
+  const [index, setIndex] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setIndex(p => (p + 1) % reviews.length), 4500);
+    return () => clearInterval(id);
+  }, []);
+  const active = reviews[index];
+  return (
+    <div className="mt-10 rounded-3xl card-surface p-8 md:p-10 shadow-lg relative overflow-hidden">
+      <div className="absolute inset-y-0 right-6 hidden h-full w-32 items-center justify-center opacity-10 lg:flex">
+        <span className="text-7xl">🍕</span>
+      </div>
+      {/* Stars */}
+      <div className="flex gap-1 mb-5">
+        {Array.from({ length: active.stars }).map((_, i) => (
+          <span key={i} className="text-amber-400 text-lg">★</span>
+        ))}
+      </div>
+      <div className="grid gap-8 lg:grid-cols-[200px_1fr] items-center">
+        <div className="flex justify-center lg:justify-start">
+          <div className="relative">
+            <img src={active.avatar} alt={active.name}
+              className="h-28 w-28 rounded-full object-cover shadow-lg ring-4 ring-offset-2"
+              style={{ ringColor: "rgba(226,98,73,0.3)" }} loading="lazy" />
+            <div className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full flex items-center justify-center text-sm"
+              style={{ background: "rgb(226,98,73)" }}>✓</div>
+          </div>
         </div>
-    );
+        <div className="space-y-3">
+          <p className="text-lg leading-relaxed italic opacity-85">"{active.text}"</p>
+          <div>
+            <div className="font-bold text-base">{active.name}</div>
+            <div className="text-sm text-muted">{active.location}</div>
+          </div>
+        </div>
+      </div>
+      <div className="mt-7 flex items-center gap-2">
+        {reviews.map((_, idx) => (
+          <button key={idx} aria-label={`Go to ${idx + 1}`} onClick={() => setIndex(idx)}
+            className={`h-2 rounded-full transition-all duration-300 ${idx === index ? "w-8 bg-accent" : "w-2 bg-gray-300"}`} />
+        ))}
+      </div>
+    </div>
+  );
 };
 
+/* ─── Count-Up Hook ──────────────────────────────── */
+function useCountUp(target, duration = 1800) {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+  useEffect(() => {
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      observer.disconnect();
+      const num = parseInt(String(target).replace(/[^0-9]/g, ""));
+      const step = Math.ceil(num / (duration / 16));
+      let cur = 0;
+      const tick = () => {
+        cur = Math.min(cur + step, num);
+        setCount(cur);
+        if (cur < num) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }, { threshold: 0.4 });
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [target, duration]);
+  return [count, ref];
+}
+
+/* ─── Stat Card ──────────────────────────────────── */
+const StatCard = ({ label, value, icon, gradient }) => {
+  const num = parseInt(String(value).replace(/[^0-9]/g, ""));
+  const suffix = String(value).replace(/[0-9]/g, "");
+  const [count, ref] = useCountUp(num);
+  return (
+    <div ref={ref}
+      className="group relative bg-white/70 backdrop-blur-md rounded-3xl p-8 text-center shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-white/50 overflow-hidden">
+      <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
+      <div className="relative z-10">
+        <div className="text-5xl mb-4 transform group-hover:scale-110 transition-transform duration-300">{icon}</div>
+        <div className="text-5xl md:text-6xl font-black text-gray-900 mb-3 tracking-tight tabular-nums">
+          {count.toLocaleString()}{suffix}
+        </div>
+        <div className="text-base md:text-lg font-bold text-gray-700">{label}</div>
+      </div>
+      <div className="absolute top-0 right-0 w-16 h-16 bg-white/20 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+    </div>
+  );
+};
+
+/* ─── Newsletter ──────────────────────────────────── */
+const Newsletter = () => {
+  const [email, setEmail] = useState("");
+  const [sent, setSent] = useState(false);
+  const submit = (e) => { e.preventDefault(); if (email) { setSent(true); setEmail(""); } };
+  return (
+    <section className="w-screen relative left-1/2 right-1/2 -mx-[50vw] py-16 md:py-20 overflow-hidden"
+      style={{ background: "linear-gradient(135deg, rgb(226,98,73), #d4380d, #c41230)" }}>
+      {/* Decorative circles */}
+      <div className="absolute top-0 right-0 w-72 h-72 rounded-full opacity-10 -translate-y-1/2 translate-x-1/4"
+        style={{ background: "radial-gradient(circle, white, transparent)" }} />
+      <div className="absolute bottom-0 left-0 w-56 h-56 rounded-full opacity-10 translate-y-1/3 -translate-x-1/4"
+        style={{ background: "radial-gradient(circle, white, transparent)" }} />
+      <div className="mx-auto max-w-3xl px-4 text-center relative z-10">
+        <p className="text-sm font-bold uppercase tracking-[0.2em] text-white/70 mb-3">Stay Updated</p>
+        <h2 className="font-display text-3xl md:text-4xl font-extrabold text-white mb-4 leading-tight">
+          Get the tastiest deals<br />straight to your inbox 🍽️
+        </h2>
+        <p className="text-white/80 mb-8 text-base max-w-xl mx-auto">
+          Weekly curated food discoveries, new restaurant alerts, and exclusive member-only offers.
+        </p>
+        {sent ? (
+          <div className="inline-flex items-center gap-3 bg-white/20 backdrop-blur text-white rounded-2xl px-6 py-4 font-semibold">
+            <span className="text-2xl">🎉</span> You're on the list! Check your inbox.
+          </div>
+        ) : (
+          <form onSubmit={submit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+            <input
+              type="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              placeholder="your@email.com"
+              required
+              className="flex-1 px-5 py-3.5 rounded-2xl bg-white/15 backdrop-blur border border-white/30 text-white placeholder:text-white/50 focus:outline-none focus:border-white/60 focus:bg-white/20 transition-all text-sm font-medium"
+            />
+            <button type="submit"
+              className="px-7 py-3.5 rounded-2xl bg-white text-sm font-bold transition-all hover:bg-white/90 hover:-translate-y-0.5 hover:shadow-lg shrink-0"
+              style={{ color: "rgb(226,98,73)" }}>
+              Subscribe
+            </button>
+          </form>
+        )}
+        <p className="mt-4 text-white/50 text-xs">No spam. Unsubscribe anytime.</p>
+      </div>
+    </section>
+  );
+};
+
+/* ─── Trending Tags ───────────────────────────────── */
+const TRENDING = ["🔥 Biryani", "🍔 Burgers", "🌮 Street Food", "🍜 Noodles", "🥗 Vegan", "🍣 Seafood", "🍰 Desserts", "☕ Café Vibes", "🫕 Curries", "🧆 BBQ"];
+
+/* ─── Chef Spotlight Card ────────────────────────── */
+const chefs = [
+  { name: "Rahim Uddin", specialty: "Biryani & Kebabs", rating: 4.9, orders: "2.4k", avatar: "https://images.unsplash.com/photo-1577219491135-ce391730fb2c?w=200&h=200&fit=crop", badge: "🏆 Top Chef" },
+  { name: "Nasrin Begum", specialty: "Bengali Sweets", rating: 4.8, orders: "1.8k", avatar: "https://images.unsplash.com/photo-1607631568010-a87245c0daf8?w=200&h=200&fit=crop", badge: "⭐ Rising Star" },
+  { name: "Kamal Hossain", specialty: "Street Food", rating: 4.7, orders: "3.1k", avatar: "https://images.unsplash.com/photo-1595273670150-bd0c3c392e46?w=200&h=200&fit=crop", badge: "🔥 Fan Favorite" },
+];
+
+/* ═══════════════════════════════════════════════════
+   HOME PAGE
+════════════════════════════════════════════════════ */
 const Home = () => {
-    const data = useLoaderData() || [];
+  const data = useLoaderData() || [];
 
-    const hotFoods = [
-        {
-            title: "Biryani",
-            category: "Rice",
-            image: "https://unsplash.com/photos/a-white-bowl-filled-with-rice-and-meat-ysmeQt1dzcw",
-            benefits: "Aromatic basmati rice with spiced meat. Bangladeshi classic favorite.",
-        },
-        {
-            title: "Samosa",
-            category: "Fried Snack",
-            image: "https://images.unsplash.com/photo-1601050915597-edc2aa6eae97?w=600&h=400&fit=crop",
-            benefits: "Crispy pastry with savory potato & meat filling. Street food favorite.",
-        },
-        {
-            title: "Shami Kebab",
-            category: "Meat Patty",
-            image: "https://images.unsplash.com/photo-1585937421945-7ab554e49957?w=600&h=400&fit=crop",
-            benefits: "Spiced minced meat patties. Cheap and delicious Bangladeshi snack.",
-        },
-        {
-            title: "Jhalmuri",
-            category: "Street Food",
-            image: "https://images.unsplash.com/photo-1599599810694-b3fa7849f565?w=600&h=400&fit=crop",
-            benefits: "Spicy puffed rice mix with peanuts. Popular street food delight.",
-        },
-    ];
+  return (
+    <main>
+      <Banner />
 
-    const [hotIndex, setHotIndex] = useState(0);
+      {/* ── Trending Tags ─────────────────────────── */}
+      <div className="border-y border-base-200 overflow-hidden bg-base-100/60 backdrop-blur">
+        <div className="flex items-center gap-3 py-3 px-4 overflow-x-auto scrollbar-hide whitespace-nowrap">
+          <span className="text-xs font-bold uppercase tracking-widest text-muted shrink-0">Trending</span>
+          <div className="w-px h-4 bg-base-200 shrink-0" />
+          {TRENDING.map(tag => (
+            <button key={tag}
+              className="chip-dark shrink-0 px-3.5 py-1.5 rounded-full text-xs font-semibold hover:bg-accent hover:text-white hover:border-transparent transition-all duration-200">
+              {tag}
+            </button>
+          ))}
+        </div>
+      </div>
 
-    useEffect(() => {
-        const id = setInterval(() => {
-            setHotIndex((prev) => (prev + 2) % hotFoods.length);
-        }, 5000);
-        return () => clearInterval(id);
-    }, [hotFoods.length]);
+      {/* ── Intro ─────────────────────────────────── */}
+      <Reveal className="mx-auto max-w-6xl px-4 pt-12">
+        <section id="intro"
+          className="hero-mesh rounded-3xl border border-base-200 p-10 md:p-14 text-center shadow-sm overflow-hidden relative">
+          {/* floating food emojis */}
+          <div className="absolute top-6 left-8 text-3xl opacity-20 float" style={{ animationDelay: "0s" }}>🍜</div>
+          <div className="absolute top-10 right-12 text-2xl opacity-20 float" style={{ animationDelay: "1.5s" }}>🍕</div>
+          <div className="absolute bottom-8 left-16 text-2xl opacity-15 float" style={{ animationDelay: "0.8s" }}>🥗</div>
+          <div className="absolute bottom-6 right-8 text-3xl opacity-15 float" style={{ animationDelay: "2.2s" }}>🍔</div>
+          <div className="relative z-10 mx-auto max-w-3xl space-y-6">
+            <div className="inline-flex items-center gap-2 bg-white/60 dark:bg-white/5 backdrop-blur border border-base-200 rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-accent">
+              🍽️ Bangladesh's Food Community
+            </div>
+            <h1 className="font-display text-4xl md:text-5xl font-extrabold leading-tight">
+              Welcome to <span className="shimmer-text">FoodNest</span>
+            </h1>
+            <p className="text-base md:text-lg text-muted max-w-xl mx-auto leading-relaxed">
+              Your gateway to authentic local flavors. Discover, review, and save the best food in your city.
+            </p>
+            <div className="flex flex-wrap gap-2 justify-center">
+              {["Curated local dishes", "Community reviews", "Save favourites"].map(badge => (
+                <span key={badge}
+                  className="rounded-full border border-base-200 bg-accent-10 px-4 py-1.5 text-xs font-semibold text-accent">
+                  ✦ {badge}
+                </span>
+              ))}
+            </div>
+            <div className="flex flex-wrap gap-3 justify-center pt-2">
+              <NavLink to="/all-items"
+                className="btn-brand inline-flex w-auto px-8 py-3 rounded-2xl text-sm pulse-glow">
+                Explore Foods →
+              </NavLink>
+              <NavLink to="/all-reviews"
+                className="inline-flex items-center gap-2 px-8 py-3 rounded-2xl text-sm font-semibold border border-base-200 hover:bg-base-200/60 transition-colors">
+                Read Reviews
+              </NavLink>
+            </div>
+          </div>
+        </section>
+      </Reveal>
 
-    const visibleHot = [
-        hotFoods[hotIndex],
-        hotFoods[(hotIndex + 1) % hotFoods.length],
-    ];
+      {/* ── Top Rated ─────────────────────────────── */}
+      <Reveal className="mx-auto max-w-6xl px-4 pt-8 pb-12">
+        <section id="top-rated" aria-label="Top rated foods" className="p-6 md:p-8 bg-base-100/60 rounded-3xl border border-base-200">
+          <div className="flex items-center justify-between flex-wrap gap-3 mb-6">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest text-accent mb-1">This Week</p>
+              <h2 className="text-2xl font-extrabold text-heading">Top Rated Foods</h2>
+            </div>
+            <NavLink to="/all-items"
+              className="text-sm font-semibold text-accent hover:underline flex items-center gap-1">
+              View all →
+            </NavLink>
+          </div>
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
+            {Array.isArray(data) ? data.map(item => <FoodCard key={item._id} item={item} />) : null}
+          </div>
+          {Array.isArray(data) && data.length === 0 && (
+            <div className="text-center py-10 text-muted text-sm">No food items yet.</div>
+          )}
+        </section>
+      </Reveal>
 
-    return (
-        <main>
-            <Banner />
-
-            {/* 1) Intro */}
-            <Reveal className="mx-auto max-w-6xl px-4 pt-14">
-                <section
-                    id="intro"
-                    className="rounded-2xl border border-base-200 bg-base-100/70 p-8 text-center shadow-sm backdrop-blur"
-                >
-                    <div className="mx-auto max-w-3xl space-y-4">
-                        <div className="space-y-2">
-                            <h1 className="text-4xl font-extrabold text-[#AD4444] md:text-5xl">
-                                Welcome to FoodNest
-                            </h1>
-                            <p className="text-base text-base-content/70 md:text-lg">
-                                Your gateway to authentic local flavors and culinary experiences.
-                            </p>
-                        </div>
-                        <div className="grid gap-3 md:grid-cols-3">
-                            {["Curated local dishes", "Transparent community reviews", "Save your favourites"].map(
-                                (badge) => (
-                                    <span
-                                        key={badge}
-                                        className="rounded-full border border-base-200 bg-[rgb(226,98,73)]/10 px-4 py-2 text-xs font-semibold text-[rgb(226,98,73)]"
-                                    >
-                                        {badge}
-                                    </span>
-                                ),
-                            )}
-                        </div>
+      {/* ── Why FoodNest ──────────────────────────── */}
+      <section className="w-screen relative left-1/2 right-1/2 -mx-[50vw] brand-mesh py-12 md:py-16">
+        <Reveal className="mx-auto max-w-6xl px-4">
+          <div className="rounded-3xl border border-base-200 bg-base-100/50 backdrop-blur-sm p-10 shadow-sm">
+            <div className="text-center max-w-3xl mx-auto mb-10">
+              <p className="text-xs font-bold uppercase tracking-widest text-accent mb-2">Why Us</p>
+              <h2 className="font-display text-3xl md:text-4xl font-extrabold text-heading mb-3">Why Choose FoodNest?</h2>
+              <p className="text-base text-muted leading-relaxed">
+                Connect with authentic local cuisines and passionate home cooks. Browse, review, save—all in one seamless platform.
+              </p>
+            </div>
+            <div className="grid gap-10 lg:grid-cols-2 items-center">
+              <div className="relative overflow-hidden rounded-2xl shadow-2xl order-2 lg:order-1 group">
+                <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=800&h=600&fit=crop"
+                  alt="Food preparation" className="w-full h-full object-cover aspect-4/3 group-hover:scale-105 transition-transform duration-700" loading="lazy" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+              </div>
+              <div className="space-y-4 order-1 lg:order-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {[
+                    { cls: "why-card-pink",   icon: "📋", title: "Browse Food Items",   desc: "Explore hundreds of local dishes with detailed descriptions, ratings, and photos." },
+                    { cls: "why-card-teal",   icon: "⭐", title: "Add Reviews",         desc: "Share your experience and help others discover great food with honest reviews." },
+                    { cls: "why-card-lime",   icon: "❤️", title: "Save Favorites",      desc: "Create your personal collection of favorite dishes for quick access anytime." },
+                    { cls: "why-card-indigo", icon: "👤", title: "Manage Profile",      desc: "Track your reviews, favorites, and downloads all in your personal dashboard." },
+                  ].map(c => (
+                    <div key={c.title}
+                      className={`group rounded-2xl border border-base-200 ${c.cls} p-5 text-center shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1`}>
+                      <div className="text-3xl mb-3 group-hover:scale-110 transition-transform duration-300">{c.icon}</div>
+                      <h3 className="text-base font-bold text-heading mb-1.5">{c.title}</h3>
+                      <p className="text-xs text-muted leading-relaxed">{c.desc}</p>
                     </div>
-                </section>
-            </Reveal>
-
-            {/* 15) Top rated */}
-            <Reveal className="mx-auto max-w-6xl px-4 pt-6 pb-14">
-                <section id="top-rated" aria-label="Top rated foods" className=" bg-base-100/70 p-8 ">
-                    <div className="text-center space-y-2">
-                        <h2 className="text-3xl font-extrabold leading-tight text-[#2D3748] md:text-4xl">Top Rated This Week</h2>
-                        <p className="text-sm text-base-content/70 md:text-base">Community favorites with the highest ratings.</p>
-                    </div>
-
-                    <div className="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-3">
-                        {Array.isArray(data)
-                            ? data.map((item) => <FoodCard key={item._id} item={item} />)
-                            : null}
-                    </div>
-
-                    <div className="mt-8 text-center">
-                        <NavLink
-                            to={"/all-items"}
-                            className="btn border-none text-white bg-[rgb(226,98,73)] hover:bg-[rgb(226,98,73)]/90"
-                        >
-                            Show All
-                        </NavLink>
-                    </div>
-                </section>
-            </Reveal>
-
-            {/* 2) Why Choose FoodNest */}
-            <section className="w-screen relative left-1/2 right-1/2 -mx-[50vw] bg-[rgb(226,98,73)]/5 py-10 md:py-14">
-                <Reveal className="mx-auto max-w-6xl px-4">
-                    <div className="rounded-2xl border border-base-200 bg-base-100/60 p-10 shadow-sm backdrop-blur">
-                        <div className="text-center max-w-3xl mx-auto mb-10">
-                            <h2 className="text-3xl md:text-4xl font-extrabold text-[#2D3748] mb-3">
-                                Why Choose FoodNest?
-                            </h2>
-                            <p className="text-base text-base-content/70 leading-relaxed">
-                                FoodNest connects you with authentic local cuisines and passionate home cooks. Browse diverse food listings, read trusted community reviews, save your favorites, and discover hidden culinary gems—all in one seamless platform designed for food lovers.
-                            </p>
-                        </div>
-
-                        <div className="grid gap-10 lg:grid-cols-2 items-center">
-                            {/* Left: Image */}
-                            <div className="relative overflow-hidden rounded-2xl shadow-xl order-2 lg:order-1">
-                                <img
-                                    src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=800&h=600&fit=crop"
-                                    alt="Fresh vegetables and food preparation"
-                                    className="w-full h-full object-cover aspect-4/3"
-                                    loading="lazy"
-                                />
-                                <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent"></div>
-                            </div>
-
-                            {/* Right: Feature Cards */}
-                            <div className="space-y-5 order-1 lg:order-2">
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                                    <div className="group rounded-2xl border border-base-200 bg-linear-to-br from-pink-50 to-rose-50 p-6 text-center shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                                        <div className="flex justify-center mb-4">
-                                            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-pink-500 to-rose-500 shadow-lg">
-                                                <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-                                                    <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
-                                                </svg>
-                                            </div>
-                                        </div>
-                                        <h3 className="text-xl font-bold text-gray-800 mb-2">Browse Food Items</h3>
-                                        <p className="text-sm text-gray-600 leading-relaxed">
-                                            Explore hundreds of local dishes with detailed descriptions, ratings, and photos.
-                                        </p>
-                                    </div>
-
-                                    <div className="group rounded-2xl border border-base-200 bg-linear-to-br from-emerald-50 to-teal-50 p-6 text-center shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                                        <div className="flex justify-center mb-4">
-                                            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-emerald-500 to-teal-500 shadow-lg">
-                                                <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                                </svg>
-                                            </div>
-                                        </div>
-                                        <h3 className="text-xl font-bold text-gray-800 mb-2">Add Reviews</h3>
-                                        <p className="text-sm text-gray-600 leading-relaxed">
-                                            Share your experience and help others discover great food with honest reviews.
-                                        </p>
-                                    </div>
-
-                                    <div className="group rounded-2xl border border-base-200 bg-linear-to-br from-green-50 to-lime-50 p-6 text-center shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                                        <div className="flex justify-center mb-4">
-                                            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-green-500 to-lime-500 shadow-lg">
-                                                <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
-                                                </svg>
-                                            </div>
-                                        </div>
-                                        <h3 className="text-xl font-bold text-gray-800 mb-2">Save Favorites</h3>
-                                        <p className="text-sm text-gray-600 leading-relaxed">
-                                            Create your personal collection of favorite dishes for quick access anytime.
-                                        </p>
-                                    </div>
-
-                                    <div className="group rounded-2xl border border-base-200 bg-linear-to-br from-blue-50 to-indigo-50 p-6 text-center shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                                        <div className="flex justify-center mb-4">
-                                            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-blue-500 to-indigo-500 shadow-lg">
-                                                <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clipRule="evenodd" />
-                                                </svg>
-                                            </div>
-                                        </div>
-                                        <h3 className="text-xl font-bold text-gray-800 mb-2">Manage Profile</h3>
-                                        <p className="text-sm text-gray-600 leading-relaxed">
-                                            Track your reviews, favorites, and downloads all in your personal dashboard.
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <div className="pt-6 text-center">
-                                    <NavLink
-                                        to="/auth/login"
-                                        className="inline-flex items-center justify-center border border-[rgb(226,98,73)] rounded-full text-[rgb(226,98,73)] px-10 py-4  text-lg font-semibold shadow-lg hover:shadow-xl hover:from-emerald-600 hover:to-teal-600 transition-all duration-300 transform hover:-translate-y-0.5"
-                                    >
-                                        Get Started
-                                    </NavLink>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </Reveal>
-            </section>
-
-
-            
-            {/* Getting Started Guide - 4 Steps */}
-            <Reveal className="w-screen relative left-1/2 right-1/2 -mx-[50vw] bg-gray-50 py-16 md:py-20 overflow-hidden">
-                <div className="mx-auto max-w-6xl px-4">
-                    <div className="text-center max-w-3xl mx-auto mb-16">
-                        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[rgb(226,98,73)] mb-2">
-                            Quick Start
-                        </p>
-                        <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
-                            How to Get Started with FoodNest
-                        </h2>
-                        <p className="text-base text-gray-600 leading-relaxed">
-                            Join our food community in four simple steps and start discovering amazing local dishes today.
-                        </p>
-                    </div>
-
-                    <div className="grid gap-6 md:grid-cols-4">
-                        {/* Step 1 */}
-                        <div className="group bg-white rounded-2xl p-8 shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100 relative overflow-hidden">
-                            <div className="absolute top-0 left-0 w-1 h-full bg-linear-to-b from-blue-500 to-blue-300"></div>
-                            <div className="absolute inset-0 bg-linear-to-br from-blue-50/0 to-blue-50/0 group-hover:from-blue-50 group-hover:to-blue-100/20 transition-all duration-300"></div>
-                            <div className="relative z-10">
-                                <div className="inline-flex h-14 w-14 items-center justify-center rounded-xl bg-linear-to-br from-blue-500 to-blue-600 text-white font-bold text-lg mb-5 shadow-md group-hover:shadow-lg group-hover:scale-110 transition-all duration-300">
-                                    01
-                                </div>
-                                <h3 className="text-lg font-bold text-gray-900 mb-3">Create Account</h3>
-                                <p className="text-sm text-gray-600 leading-relaxed">
-                                    Sign up with your email and password. It takes less than a minute to join our food community.
-                                </p>
-                            </div>
-                        </div>
-
-                        {/* Step 2 */}
-                        <div className="group bg-white rounded-2xl p-8 shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100 relative overflow-hidden">
-                            <div className="absolute top-0 left-0 w-1 h-full bg-linear-to-b from-purple-500 to-purple-300"></div>
-                            <div className="absolute inset-0 bg-linear-to-br from-purple-50/0 to-purple-50/0 group-hover:from-purple-50 group-hover:to-purple-100/20 transition-all duration-300"></div>
-                            <div className="relative z-10">
-                                <div className="inline-flex h-14 w-14 items-center justify-center rounded-xl bg-linear-to-br from-purple-500 to-purple-600 text-white font-bold text-lg mb-5 shadow-md group-hover:shadow-lg group-hover:scale-110 transition-all duration-300">
-                                    02
-                                </div>
-                                <h3 className="text-lg font-bold text-gray-900 mb-3">Explore Foods</h3>
-                                <p className="text-sm text-gray-600 leading-relaxed">
-                                    Browse through hundreds of local dishes with detailed descriptions, ratings, and photos.
-                                </p>
-                            </div>
-                        </div>
-
-                        {/* Step 3 */}
-                        <div className="group bg-white rounded-2xl p-8 shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100 relative overflow-hidden">
-                            <div className="absolute top-0 left-0 w-1 h-full bg-linear-to-b from-green-500 to-green-300"></div>
-                            <div className="absolute inset-0 bg-linear-to-br from-green-50/0 to-green-50/0 group-hover:from-green-50 group-hover:to-green-100/20 transition-all duration-300"></div>
-                            <div className="relative z-10">
-                                <div className="inline-flex h-14 w-14 items-center justify-center rounded-xl bg-linear-to-br from-green-500 to-green-600 text-white font-bold text-lg mb-5 shadow-md group-hover:shadow-lg group-hover:scale-110 transition-all duration-300">
-                                    03
-                                </div>
-                                <h3 className="text-lg font-bold text-gray-900 mb-3">Share Reviews</h3>
-                                <p className="text-sm text-gray-600 leading-relaxed">
-                                    Post your honest reviews and ratings. Help the community discover their next favorite meal!
-                                </p>
-                            </div>
-                        </div>
-
-                        {/* Step 4 */}
-                        <div className="group bg-white rounded-2xl p-8 shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border border-gray-100 relative overflow-hidden">
-                            <div className="absolute top-0 left-0 w-1 h-full bg-linear-to-b from-orange-500 to-orange-300"></div>
-                            <div className="absolute inset-0 bg-linear-to-br from-orange-50/0 to-orange-50/0 group-hover:from-orange-50 group-hover:to-orange-100/20 transition-all duration-300"></div>
-                            <div className="relative z-10">
-                                <div className="inline-flex h-14 w-14 items-center justify-center rounded-xl bg-linear-to-br from-orange-500 to-orange-600 text-white font-bold text-lg mb-5 shadow-md group-hover:shadow-lg group-hover:scale-110 transition-all duration-300">
-                                    04
-                                </div>
-                                <h3 className="text-lg font-bold text-gray-900 mb-3">Save Favorites</h3>
-                                <p className="text-sm text-gray-600 leading-relaxed">
-                                    Build your collection of favorite dishes for quick access anytime you want to order again.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* CTA Button */}
-                    <div className="mt-12 text-center">
-                        <NavLink
-                            to="/auth/login"
-                            className="inline-flex items-center justify-center bg-linear-to-r from-[rgb(226,98,73)] to-[#EB4949] text-white font-bold rounded-full px-12 py-4 shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
-                        >
-                            Start Your Journey
-                        </NavLink>
-                    </div>
+                  ))}
                 </div>
-            </Reveal>
-
-            {/* 3) Features */}
-            <Reveal className="mx-auto max-w-6xl px-4 pt-6">
-                <section
-                    aria-label="Features"
-                    className="relative overflow-hidden  md:p-10"
-                >
-                   
-
-                    <div className="relative ">
-                        <SectionHeading
-                            title="Core Features"
-                            description="Everything you need to explore local food confidently—fast browsing, trusted reviews, and personal collections."
-                            align="center"
-                        />
-
-                        <div className="mt-10 grid gap-5 sm:grid-cols-2 md:grid-cols-4">
-                            {[
-                                {
-                                    icon: "🍅",
-                                    title: "Fresh Local Ingredients",
-                                    desc: "Sourced daily from nearby farms and vendors.",
-                                },
-                                {
-                                    icon: "👨‍🍳",
-                                    title: "Top Rated Chefs",
-                                    desc: "Curated dishes from community-favorite cooks.",
-                                },
-                                {
-                                    icon: "⚡",
-                                    title: "Fast Discovery",
-                                    desc: "Find great food quickly with smart listings.",
-                                },
-                                {
-                                    icon: "⭐",
-                                    title: "Community Reviews",
-                                    desc: "Real feedback from local food lovers.",
-                                },
-                            ].map((f) => (
-                                <div
-                                    key={f.title}
-                                    className="group relative overflow-hidden rounded-2xl border border-base-200 bg-base-100 p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-                                >
-                                    <div className="absolute inset-x-0 top-0 h-1 bg-[rgb(226,98,73)]/70" />
-                                    <div className="absolute inset-0 bg-[rgb(226,98,73)]/0 transition-colors duration-300 group-hover:bg-[rgb(226,98,73)]/5" />
-
-                                    <div className="relative">
-                                        <div className="flex items-center justify-center">
-                                            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[rgb(226,98,73)]/12 text-2xl ring-1 ring-[rgb(226,98,73)]/15 transition-transform duration-300 group-hover:scale-110">
-                                                {f.icon}
-                                            </div>
-                                        </div>
-
-                                        <h3 className="mt-5 text-center text-lg font-extrabold text-base-content">
-                                            {f.title}
-                                        </h3>
-                                        <p className="mt-2 text-center text-sm leading-relaxed text-base-content/70">
-                                            {f.desc}
-                                        </p>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-            </Reveal>
-
-           
-
-            {/* 5) Categories */}
-            <section className="w-screen relative left-1/2 right-1/2 -mx-[50vw] bg-[rgb(226,98,73)]/10 via-base-100 to-base-100 py-10 md:py-14">
-                
-                {/* 10) Blog */}
-            <Reveal className="mx-auto max-w-6xl px-4 pt-6">
-                <section aria-label="Categories" className=" p-8 ">
-                    <SectionHeading
-                        title="Popular Categories"
-                        description="Quickly jump into the cuisines people search for most."
-                    />
-                    <div className="mt-6 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                        {[
-                            {
-                                name: "Burgers",
-                                img: "https://images.unsplash.com/photo-1550547660-d9450f859349?w=500&h=360&fit=crop&auto=format",
-                            },
-                            {
-                                name: "BBQ",
-                                img: "https://t4.ftcdn.net/jpg/03/36/59/67/360_F_336596714_KYxkCzJK686f0lon80WIeHOecR3OIy5S.jpg",
-                            },
-                            {
-                                name: "Seafood",
-                                img: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=500&h=360&fit=crop&auto=format",
-                            },
-                            {
-                                name: "Vegan",
-                                img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&h=560&fit=crop&auto=format",
-                            },
-                            {
-                                name: "Desserts",
-                                img: "https://images.pexels.com/photos/1126359/pexels-photo-1126359.jpeg",
-                            },
-                            {
-                                name: "Street Food",
-                                img: "https://images.unsplash.com/photo-1498654896293-37aacf113fd9?w=500&h=360&fit=crop&auto=format",
-                            },
-                            {
-                                name: "Biryani",
-                                img: "https://images.unsplash.com/photo-1546069901-eacef0df6022?w=500&h=360&fit=crop&auto=format",
-                            },
-                            {
-                                name: "Snacks",
-                                img: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=500&h=360&fit=crop&auto=format",
-                            },
-                        ].map((c) => (
-                            <div
-                                key={c.name}
-                                className="group relative overflow-hidden rounded-2xl border border-white/70 bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-1"
-                            >
-                                <img
-                                    src={c.img}
-                                    alt={c.name}
-                                    className="h-40 w-full object-cover"
-                                    loading="lazy"
-                                />
-                                <div className="absolute inset-0 bg-linear-to-t from-black/35 via-black/10 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                <div className="absolute bottom-0 left-0 right-0 p-4">
-                                    <div className="inline-flex items-center gap-2 rounded-full bg-white/95 px-3 py-1 text-sm font-semibold text-gray-900 shadow">
-                                        <span className="h-2.5 w-2.5 rounded-full bg-[#AD4444]"></span>
-                                        {c.name}
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </section>
-            </Reveal>
-                
-                
-                
-               
-            </section>
-
-
-         
-
-
-            {/* 8) Testimonials - Full width carousel */}
-            <section className="w-screen relative left-1/2 right-1/2 -mx-[50vw] bg-[#F7F0E8] py-14 md:py-16 overflow-hidden">
-                <div className="mx-auto max-w-7xl px-4">
-                    <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-                        <div className="space-y-3 max-w-3xl">
-                            <h2 className="text-3xl md:text-4xl font-extrabold text-[#2D3748] leading-tight">
-                                Discover Our Satisfied Customers
-                            </h2>
-                            <p className="text-base text-gray-700">
-                                Hear from food lovers who explore, review, and save their favourites on FoodNest. Real stories, real trust.
-                            </p>
-                        </div>
-
-                        <NavLink
-                            to="/all-reviews"
-                            className="btn btn-outline border-[rgb(226,98,73)] text-[rgb(226,98,73)] hover:bg-[rgb(226,98,73)] hover:text-white"
-                        >
-                            All Reviews
-                        </NavLink>
-                    </div>
-
-                    <Carousel />
+                <div className="pt-2 text-center">
+                  <NavLink to="/auth/login"
+                    className="inline-flex items-center justify-center border-2 border-accent rounded-full text-accent px-10 py-3.5 text-base font-bold hover:bg-accent hover:text-white transition-all duration-300 hover:-translate-y-0.5">
+                    Get Started →
+                  </NavLink>
                 </div>
-            </section>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+      </section>
 
-            
-
-            {/* 12) FAQ */}
-            <Reveal className="mx-auto max-w-6xl px-4 pt-6">
-                <section aria-label="FAQ" className="py-12">
-                    <div className="text-center mb-12 space-y-4">
-                        <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900">
-                            Have any <span className="text-[#EB4949]">questions?</span>
-                        </h2>
-                        <p className="text-gray-600 text-lg max-w-3xl mx-auto">
-                            Everything you need to know about using FoodNest. Can't find the answer you're looking for? Chat with our team.
-                        </p>
+      {/* ── Chef Spotlight ────────────────────────── */}
+      <Reveal className="mx-auto max-w-6xl px-4 py-14">
+        <section aria-label="Chef Spotlight">
+          <div className="text-center mb-10">
+            <p className="text-xs font-bold uppercase tracking-widest text-accent mb-2">Community Stars</p>
+            <h2 className="font-display text-3xl md:text-4xl font-extrabold text-heading mb-3">Chef Spotlight</h2>
+            <p className="text-muted text-base max-w-xl mx-auto">
+              Meet the talented cooks behind FoodNest's most loved dishes.
+            </p>
+          </div>
+          <div className="grid gap-5 sm:grid-cols-3">
+            {chefs.map(chef => (
+              <div key={chef.name}
+                className="group feature-card rounded-2xl p-6 text-center shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1.5 relative overflow-hidden">
+                {/* accent top border */}
+                <div className="absolute inset-x-0 top-0 h-0.5 bg-accent opacity-60" />
+                <div className="relative">
+                  <img src={chef.avatar} alt={chef.name}
+                    className="w-20 h-20 rounded-full object-cover mx-auto mb-4 ring-4 ring-offset-2 shadow-lg"
+                    style={{ ringColor: "rgba(226,98,73,0.3)" }} loading="lazy" />
+                  <span className="inline-block text-xs font-bold px-3 py-1 rounded-full bg-accent-10 text-accent mb-3">
+                    {chef.badge}
+                  </span>
+                  <h3 className="font-bold text-lg text-heading">{chef.name}</h3>
+                  <p className="text-xs text-muted mb-4">{chef.specialty}</p>
+                  <div className="flex items-center justify-center gap-5 text-sm">
+                    <div className="text-center">
+                      <div className="font-extrabold text-heading">{chef.rating}</div>
+                      <div className="text-xs text-muted">Rating</div>
                     </div>
-
-                    <div className="max-w-4xl mx-auto space-y-4">
-                        {[{
-                            q: "How do I create an account on FoodNest?",
-                            a: "Click the 'Sign Up' button in the navigation bar, fill in your details including name, email, and password, and you'll be ready to explore all features.",
-                        }, {
-                            q: "Do I need an account to browse foods?",
-                            a: "No. You can explore the public listings anytime. Login is required for protected actions like adding reviews and managing your profile.",
-                        }, {
-                            q: "Is there a fee for using FoodNest?",
-                            a: "FoodNest is completely free to use. Browse foods, read reviews, save favourites, and manage your profile at no cost.",
-                        }, {
-                            q: "Can I manage my reviews from my phone?",
-                            a: "Yes! FoodNest is fully responsive and works seamlessly on mobile devices, tablets, and desktops.",
-                        }, {
-                            q: "How do favourites work?",
-                            a: "After login, you can save foods to your favourites list so you can find them quickly later. Just click the heart icon on any food item.",
-                        }].map((faq, idx) => (
-                            <div
-                                key={idx}
-                                className="group bg-gray-50 hover:bg-white border border-gray-200 rounded-2xl transition-all duration-300 hover:shadow-lg"
-                            >
-                                <details className="overflow-hidden">
-                                    <summary className="flex items-center justify-between cursor-pointer px-6 py-5 font-bold text-lg text-gray-900 list-none">
-                                        <span className="flex-1">{faq.q}</span>
-                                        <span className="ml-4 shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-gray-200 group-hover:bg-[#EB4949] group-hover:text-white transition-colors">
-                                            <svg className="w-5 h-5 transform transition-transform duration-300 group-open:rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                            </svg>
-                                        </span>
-                                    </summary>
-                                    <div className="px-6 pb-5 pt-2">
-                                        <p className="text-gray-600 leading-relaxed">{faq.a}</p>
-                                    </div>
-                                </details>
-                            </div>
-                        ))}
+                    <div className="w-px h-8 bg-base-200" />
+                    <div className="text-center">
+                      <div className="font-extrabold text-heading">{chef.orders}</div>
+                      <div className="text-xs text-muted">Orders</div>
                     </div>
-                </section>
-            </Reveal>
-
-            {/* 6) Statistics - Full Width */}
-            <section className="w-screen relative left-1/2 right-1/2 -mx-[50vw] bg-linear-to-br from-[#FFB8A6] via-[#FFCAB8] to-[#FFD4C4] py-20 overflow-hidden">
-                {/* Decorative Elements */}
-                <div className="absolute top-10 right-10 w-32 h-32 bg-white/10 rounded-full blur-3xl"></div>
-                <div className="absolute bottom-10 left-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
-
-                <div className="mx-auto max-w-7xl px-4 relative z-10">
-                    <div className="text-center mb-16 space-y-5">
-
-                        <h2 className="text-4xl md:text-6xl font-extrabold text-gray-900 leading-tight">
-                            Join Our Growing <span className="text-[#EB4949]">Food Community</span>
-                        </h2>
-                        <p className="text-gray-800 text-lg md:text-xl max-w-3xl mx-auto leading-relaxed font-medium">
-                            Discover authentic local flavors, share your experiences, and connect with passionate food lovers.
-                            <span className="text-gray-900 font-bold"> Together, we explore delicious stories!</span>
-                        </p>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-                        {[
-                            { label: "Happy Customers", value: "12,500+", icon: "😊", color: "from-orange-400 to-red-400" },
-                            { label: "Food Items Listed", value: "3,850", icon: "🍽️", color: "from-blue-400 to-indigo-400" },
-                            { label: "Reviews Posted", value: "25,000+", icon: "⭐", color: "from-green-400 to-emerald-400" },
-                        ].map((stat) => (
-                            <div
-                                key={stat.label}
-                                className="group relative bg-white/70 backdrop-blur-md rounded-3xl p-8 text-center shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-white/50 overflow-hidden"
-                            >
-                                {/* Background Gradient on Hover */}
-                                <div className={`absolute inset-0 bg-linear-to-br ${stat.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}></div>
-
-                                <div className="relative z-10">
-                                    {/* Icon */}
-                                    <div className="text-5xl mb-4 transform group-hover:scale-110 transition-transform duration-300">
-                                        {stat.icon}
-                                    </div>
-
-                                    {/* Number */}
-                                    <div className="text-6xl md:text-7xl font-black text-gray-900 mb-4 tracking-tight">
-                                        {stat.value}
-                                    </div>
-
-                                    {/* Label */}
-                                    <div className="text-lg md:text-xl font-bold text-gray-700">
-                                        {stat.label}
-                                    </div>
-                                </div>
-
-                                {/* Decorative Corner */}
-                                <div className="absolute top-0 right-0 w-16 h-16 bg-white/20 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                            </div>
-                        ))}
-                    </div>
-
-                    {/* Bottom Text */}
-                    <div className="mt-12 text-center">
-                        <p className="text-gray-700 text-base md:text-lg font-medium">
-                            Join thousands of food lovers exploring authentic local flavors! 🍴
-                        </p>
-                    </div>
+                  </div>
                 </div>
-            </section>
+              </div>
+            ))}
+          </div>
+        </section>
+      </Reveal>
 
-
-            {/* 13) Download App Section - Full Width */}
-            <section className="w-screen relative left-[50%] right-[50%] -mx-[50vw] bg-linear-to-br from-yellow-100 via-yellow-200 to-amber-200 py-16 overflow-hidden">
-                {/* Food Pattern Background */}
-                <div className="absolute inset-0 opacity-10">
-                    <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                        <defs>
-                            <pattern id="food-pattern" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
-                                <text x="10" y="30" fontSize="30" fill="currentColor" opacity="0.3">🍕</text>
-                                <text x="60" y="60" fontSize="25" fill="currentColor" opacity="0.3">🍔</text>
-                                <text x="20" y="80" fontSize="20" fill="currentColor" opacity="0.3">🥗</text>
-                                <text x="75" y="25" fontSize="22" fill="currentColor" opacity="0.3">🍜</text>
-                            </pattern>
-                        </defs>
-                        <rect width="100%" height="100%" fill="url(#food-pattern)" />
-                    </svg>
+      {/* ── Getting Started ───────────────────────── */}
+      <Reveal className="w-screen relative left-1/2 right-1/2 -mx-[50vw] steps-bg py-16 md:py-20 overflow-hidden">
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="text-center max-w-3xl mx-auto mb-14">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent mb-2">Quick Start</p>
+            <h2 className="font-display text-3xl md:text-4xl font-extrabold text-heading mb-4">
+              How to Get Started
+            </h2>
+            <p className="text-muted text-base leading-relaxed">
+              Join our food community in four simple steps.
+            </p>
+          </div>
+          <div className="grid gap-5 md:grid-cols-4">
+            {[
+              { n: "01", title: "Create Account", desc: "Sign up with email in under a minute.", color: "from-blue-500 to-blue-600", bar: "from-blue-500 to-blue-300" },
+              { n: "02", title: "Explore Foods",  desc: "Browse local dishes with ratings and photos.", color: "from-violet-500 to-violet-600", bar: "from-violet-500 to-violet-300" },
+              { n: "03", title: "Share Reviews",  desc: "Post honest reviews and help the community.", color: "from-emerald-500 to-emerald-600", bar: "from-emerald-500 to-emerald-300" },
+              { n: "04", title: "Save Favorites", desc: "Build your personal dish collection.", color: "from-orange-500 to-orange-600", bar: "from-orange-500 to-orange-300" },
+            ].map(s => (
+              <div key={s.n}
+                className="group step-card rounded-2xl p-7 shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 relative overflow-hidden">
+                <div className={`absolute top-0 left-0 w-1 h-full bg-gradient-to-b ${s.bar}`} />
+                <div className={`absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-300 bg-gradient-to-br ${s.color}`} />
+                <div className="relative z-10">
+                  <div className={`inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${s.color} text-white font-black text-base mb-5 shadow-md group-hover:shadow-lg group-hover:scale-110 transition-all duration-300`}>
+                    {s.n}
+                  </div>
+                  <h3 className="text-base font-bold text-heading mb-2">{s.title}</h3>
+                  <p className="text-sm text-muted leading-relaxed">{s.desc}</p>
                 </div>
+              </div>
+            ))}
+          </div>
+          <div className="mt-10 text-center">
+            <NavLink to="/auth/login"
+              className="inline-flex items-center justify-center bg-accent text-white font-bold rounded-full px-12 py-4 shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 hover:bg-accent-dark">
+              Start Your Journey →
+            </NavLink>
+          </div>
+        </div>
+      </Reveal>
 
-                <div className="mx-auto max-w-7xl px-4 relative z-10">
-                    <div className="grid lg:grid-cols-2 gap-12 items-center">
-                        {/* Left: Content */}
-                        <div className="text-left space-y-6">
-                            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
-                                Download The FoodNest App Now!
-                            </h2>
-                            <p className="text-xl md:text-2xl text-gray-800">
-                                Get <span className="font-bold text-gray-900">5% off</span> on your first order through the FoodNest app and make your food discovery experience even smoother!
-                            </p>
+      {/* ── Core Features ─────────────────────────── */}
+      <Reveal className="mx-auto max-w-6xl px-4 py-14">
+        <SectionHeading title="Core Features" align="center"
+          description="Everything you need to explore local food confidently." />
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 md:grid-cols-4">
+          {[
+            { icon: "🍅", title: "Fresh Ingredients",   desc: "Sourced daily from local farms and vendors." },
+            { icon: "👨‍🍳", title: "Top Rated Chefs",   desc: "Curated dishes from community-favorite cooks." },
+            { icon: "⚡",  title: "Fast Discovery",     desc: "Find great food quickly with smart listings." },
+            { icon: "⭐",  title: "Community Reviews",  desc: "Real feedback from local food lovers." },
+          ].map(f => (
+            <div key={f.title}
+              className="group feature-card relative overflow-hidden rounded-2xl p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+              <div className="absolute inset-x-0 top-0 h-0.5 bg-accent opacity-70" />
+              <div className="absolute inset-0 bg-accent opacity-0 group-hover:opacity-[0.04] transition-colors duration-300" />
+              <div className="relative text-center">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-accent-10 text-2xl ring-1 ring-accent/15 group-hover:scale-110 transition-transform duration-300 mb-4">
+                  {f.icon}
+                </div>
+                <h3 className="text-base font-extrabold text-heading mb-2">{f.title}</h3>
+                <p className="text-sm text-muted leading-relaxed">{f.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Reveal>
 
-                            <div className="flex flex-wrap gap-4 pt-4">
-                                <a
-                                    href="https://www.apple.com/app-store/"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                                >
-                                    <svg className="w-8 h-8 mr-3" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M18.71 19.5C17.88 20.74 17 21.95 15.66 21.97C14.32 22 13.89 21.18 12.37 21.18C10.84 21.18 10.37 21.95 9.09997 22C7.78997 22.05 6.79997 20.68 5.95997 19.47C4.24997 17 2.93997 12.45 4.69997 9.39C5.56997 7.87 7.12997 6.91 8.81997 6.88C10.1 6.86 11.32 7.75 12.11 7.75C12.89 7.75 14.37 6.68 15.92 6.84C16.57 6.87 18.39 7.1 19.56 8.82C19.47 8.88 17.39 10.1 17.41 12.63C17.44 15.65 20.06 16.66 20.09 16.67C20.06 16.74 19.67 18.11 18.71 19.5ZM13 3.5C13.73 2.67 14.94 2.04 15.94 2C16.07 3.17 15.6 4.35 14.9 5.19C14.21 6.04 13.07 6.7 11.95 6.61C11.8 5.46 12.36 4.26 13 3.5Z" />
-                                    </svg>
-                                    <div className="text-left">
-                                        <div className="text-xs">Download on the</div>
-                                        <div className="text-lg font-semibold">App Store</div>
-                                    </div>
-                                </a>
+      {/* ── Newsletter ────────────────────────────── */}
+      <Newsletter />
 
-                                <a
-                                    href="https://play.google.com/store"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-800 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                                >
-                                    <svg className="w-8 h-8 mr-3" fill="currentColor" viewBox="0 0 24 24">
-                                        <path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.6 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.53,12.9 20.18,13.18L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z" />
-                                    </svg>
-                                    <div className="text-left">
-                                        <div className="text-xs">GET IT ON</div>
-                                        <div className="text-lg font-semibold">Google Play</div>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
+      {/* ── Popular Categories ────────────────────── */}
+      <section className="w-screen relative left-1/2 right-1/2 -mx-[50vw] bg-accent-5 py-12 md:py-16">
+        <Reveal className="mx-auto max-w-6xl px-4">
+          <SectionHeading title="Popular Categories" description="Quickly jump into the cuisines people search for most." />
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {[
+              { name: "Burgers",     img: "https://images.unsplash.com/photo-1550547660-d9450f859349?w=500&h=360&fit=crop" },
+              { name: "BBQ",         img: "https://t4.ftcdn.net/jpg/03/36/59/67/360_F_336596714_KYxkCzJK686f0lon80WIeHOecR3OIy5S.jpg" },
+              { name: "Seafood",     img: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=500&h=360&fit=crop" },
+              { name: "Vegan",       img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&h=560&fit=crop" },
+              { name: "Desserts",    img: "https://images.pexels.com/photos/1126359/pexels-photo-1126359.jpeg" },
+              { name: "Street Food", img: "https://images.unsplash.com/photo-1498654896293-37aacf113fd9?w=500&h=360&fit=crop" },
+              { name: "Biryani",     img: "https://images.unsplash.com/photo-1546069901-eacef0df6022?w=500&h=360&fit=crop" },
+              { name: "Snacks",      img: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=500&h=360&fit=crop" },
+            ].map(c => (
+              <div key={c.name}
+                className="group category-card relative overflow-hidden rounded-2xl shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 cursor-pointer">
+                <img src={c.img} alt={c.name} className="h-40 w-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute bottom-0 left-0 right-0 p-4">
+                  <div className="inline-flex items-center gap-2 rounded-full bg-white/95 px-3 py-1 text-sm font-semibold text-gray-900 shadow">
+                    <span className="h-2 w-2 rounded-full bg-accent" />
+                    {c.name}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Reveal>
+      </section>
 
-                        {/* Right: Phone Mockups */}
-                        <div className="relative lg:block hidden">
-                            <div className="relative w-full h-[500px]">
-                                {/* Phone 1 */}
-                                <div className="absolute right-32 top-0 w-64 h-[500px] transform rotate-3 transition-transform hover:rotate-0">
-                                    <div className="w-full h-full bg-gray-900 rounded-[3rem] shadow-2xl p-3">
-                                        <div className="w-full h-full bg-white rounded-[2.5rem] overflow-hidden">
-                                            <img
-                                                src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=800&fit=crop"
-                                                alt="Food app screen"
-                                                className="w-full h-full object-cover"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
+      {/* ── Testimonials ──────────────────────────── */}
+      <section className="w-screen relative left-1/2 right-1/2 -mx-[50vw] testimonial-bg py-14 md:py-16 overflow-hidden">
+        <div className="mx-auto max-w-7xl px-4">
+          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+            <div className="space-y-2 max-w-2xl">
+              <p className="text-xs font-bold uppercase tracking-widest text-accent">Testimonials</p>
+              <h2 className="font-display text-3xl md:text-4xl font-extrabold text-heading leading-tight">
+                Discover Our<br />Satisfied Customers
+              </h2>
+              <p className="text-muted text-base">
+                Real stories from food lovers who explore, review, and save their favourites on FoodNest.
+              </p>
+            </div>
+            <NavLink to="/all-reviews"
+              className="self-start mt-2 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border-2 border-accent text-accent text-sm font-bold hover:bg-accent hover:text-white transition-all duration-200">
+              All Reviews →
+            </NavLink>
+          </div>
+          <Carousel />
+        </div>
+      </section>
 
-                                {/* Phone 2 */}
-                                <div className="absolute right-0 top-12 w-64 h-[500px] transform -rotate-3 transition-transform hover:rotate-0">
-                                    <div className="w-full h-full bg-gray-900 rounded-[3rem] shadow-2xl p-3">
-                                        <div className="w-full h-full bg-white rounded-[2.5rem] overflow-hidden">
-                                            <img
-                                                src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=800&fit=crop"
-                                                alt="Food app screen"
-                                                className="w-full h-full object-cover"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+      {/* ── App Download ──────────────────────────── */}
+      <section className="w-screen relative left-[50%] right-[50%] -mx-[50vw] app-dl-bg py-16 overflow-hidden">
+        <div className="absolute inset-0 opacity-8">
+          <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="food-p" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+                <text x="10" y="30" fontSize="28" fill="currentColor" opacity="0.25">🍕</text>
+                <text x="60" y="65" fontSize="22" fill="currentColor" opacity="0.25">🍔</text>
+                <text x="20" y="82" fontSize="18" fill="currentColor" opacity="0.2">🥗</text>
+                <text x="75" y="22" fontSize="20" fill="currentColor" opacity="0.2">🍜</text>
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#food-p)" />
+          </svg>
+        </div>
+        <div className="mx-auto max-w-7xl px-4 relative z-10">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="space-y-6">
+              <span className="inline-block text-xs font-bold uppercase tracking-widest text-accent px-3 py-1.5 rounded-full bg-accent-10">
+                📱 Mobile App
+              </span>
+              <h2 className="font-display text-4xl md:text-5xl font-bold text-heading leading-tight">
+                Download The FoodNest App!
+              </h2>
+              <p className="text-lg text-muted">
+                Get <span className="font-bold text-heading">5% off</span> on your first order through the app.
+              </p>
+              <div className="flex flex-wrap gap-3 pt-2">
+                {[
+                  { href: "https://www.apple.com/app-store/", label: "App Store", sub: "Download on the" },
+                  { href: "https://play.google.com/store", label: "Google Play", sub: "GET IT ON" },
+                ].map(a => (
+                  <a key={a.label} href={a.href} target="_blank" rel="noopener noreferrer"
+                    className="inline-flex items-center bg-gray-900 text-white px-5 py-3 rounded-xl hover:bg-gray-800 transition-all shadow-md hover:shadow-xl hover:-translate-y-0.5">
+                    <div className="text-left">
+                      <div className="text-xs opacity-70">{a.sub}</div>
+                      <div className="text-base font-bold">{a.label}</div>
                     </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+            <div className="relative lg:block hidden">
+              <div className="relative w-full h-[480px]">
+                <div className="absolute right-32 top-0 w-60 h-[480px] transform rotate-3 hover:rotate-0 transition-transform duration-500">
+                  <div className="w-full h-full bg-gray-900 rounded-[3rem] shadow-2xl p-2.5">
+                    <div className="w-full h-full rounded-[2.5rem] overflow-hidden">
+                      <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=800&fit=crop" alt="App" className="w-full h-full object-cover" />
+                    </div>
+                  </div>
                 </div>
-            </section>
+                <div className="absolute right-0 top-10 w-60 h-[480px] transform -rotate-3 hover:rotate-0 transition-transform duration-500">
+                  <div className="w-full h-full bg-gray-900 rounded-[3rem] shadow-2xl p-2.5">
+                    <div className="w-full h-full rounded-[2.5rem] overflow-hidden">
+                      <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=800&fit=crop" alt="App" className="w-full h-full object-cover" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
+      {/* ── FAQ ───────────────────────────────────── */}
+      <Reveal className="mx-auto max-w-6xl px-4 py-14">
+        <section aria-label="FAQ">
+          <div className="text-center mb-12 space-y-3">
+            <p className="text-xs font-bold uppercase tracking-widest text-accent">Help Center</p>
+            <h2 className="font-display text-3xl md:text-5xl font-extrabold text-heading">
+              Have any <span className="text-accent">questions?</span>
+            </h2>
+            <p className="text-muted text-base max-w-2xl mx-auto">
+              Everything you need to know about using FoodNest.
+            </p>
+          </div>
+          <div className="max-w-4xl mx-auto space-y-3">
+            {[
+              { q: "How do I create an account?", a: "Click 'Sign Up', fill your name, email, and password—ready in under a minute." },
+              { q: "Do I need an account to browse foods?", a: "No. Public listings are open to all. Login is needed for reviews, favourites, and your dashboard." },
+              { q: "Is there a fee for using FoodNest?", a: "FoodNest is completely free. Browse, review, save—no hidden charges." },
+              { q: "Can I manage my reviews from my phone?", a: "Yes! FoodNest is fully responsive and works great on mobile, tablet, and desktop." },
+              { q: "How do favourites work?", a: "After login, click the heart icon on any food to save it. Access your full list in the dashboard." },
+            ].map((faq, idx) => (
+              <div key={idx} className="faq-item rounded-2xl transition-all duration-300 hover:shadow-md">
+                <details className="overflow-hidden group">
+                  <summary className="flex items-center justify-between cursor-pointer px-6 py-5 font-bold text-base faq-q list-none">
+                    <span className="flex-1">{faq.q}</span>
+                    <span className="ml-4 shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-base-200 hover:bg-accent hover:text-white transition-colors text-heading">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                      </svg>
+                    </span>
+                  </summary>
+                  <div className="px-6 pb-5 pt-1">
+                    <p className="faq-a text-sm leading-relaxed">{faq.a}</p>
+                  </div>
+                </details>
+              </div>
+            ))}
+          </div>
+        </section>
+      </Reveal>
 
+      {/* ── Statistics ────────────────────────────── */}
+      <section className="w-screen relative left-1/2 right-1/2 -mx-[50vw] stats-bg py-20 overflow-hidden">
+        <div className="absolute top-10 right-10 w-32 h-32 bg-white/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-10 left-10 w-40 h-40 bg-white/10 rounded-full blur-3xl" />
+        <div className="mx-auto max-w-7xl px-4 relative z-10">
+          <div className="text-center mb-14 space-y-4">
+            <p className="text-xs font-bold uppercase tracking-widest text-accent">By The Numbers</p>
+            <h2 className="font-display text-4xl md:text-6xl font-extrabold text-gray-900 leading-tight">
+              Join Our Growing <span className="text-accent">Food Community</span>
+            </h2>
+            <p className="text-gray-800 text-lg max-w-2xl mx-auto">
+              Discover authentic local flavors and connect with passionate food lovers.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <StatCard label="Happy Customers" value="12500+" icon="😊" gradient="from-orange-400 to-red-400" />
+            <StatCard label="Food Items Listed" value="3850"  icon="🍽️" gradient="from-blue-400 to-indigo-400" />
+            <StatCard label="Reviews Posted"    value="25000+" icon="⭐" gradient="from-green-400 to-emerald-400" />
+          </div>
+        </div>
+      </section>
 
-
-        </main>
-    );
+    </main>
+  );
 };
 
 export default Home;

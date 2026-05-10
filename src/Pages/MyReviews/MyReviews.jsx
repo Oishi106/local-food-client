@@ -1,8 +1,8 @@
-import { use, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { FoodCard } from "../../components/FoodCard";
 const MyReviews = () => {
-    const {user} = use(AuthContext)
+    const {user} = useContext(AuthContext)
     const [items, setItems] = useState([])
     const [loading, setLoading] = useState(true)
 

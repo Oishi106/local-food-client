@@ -36,7 +36,8 @@ Local Food Lovers Network is a full-stack web application designed for food enth
 
 - 🔐 Firebase Authentication (Email/Password + Google login)
 
-- 📝 Add, Edit & Delete Reviews (Protected routes)
+- 🧭 Dashboard (separate layout, role-based routes)
+- 📝 Add, Edit & Delete (CRUD) only inside Dashboard
 
 - ⭐ Top Reviews Section on Home (Dynamic)
 
@@ -55,6 +56,21 @@ Local Food Lovers Network is a full-stack web application designed for food enth
 - ❌ 404 Page with a fun image
 
 - 🔁 Hero Slider + Extra Sections
+
+## ⚙️ Environment
+
+- `VITE_API_BASE_URL` (optional): backend base URL (default: `http://localhost:3000`)
+
+## 🔌 Dashboard API expectations
+
+The dashboard fetches data from the backend (no static values). Expected endpoints:
+
+- `GET /users/role?email=...` → `{ role: "user" | "admin" }`
+- `GET /dashboard/overview?email=...` → `{ metrics: {...}, chartData: [...] }`
+- `GET /bookings` and `GET /bookings?email=...`
+- `GET /payments?email=...`
+- `GET /users`
+- CRUD table uses `GET/POST/PUT/DELETE /details` and `/details/:id`
 
 
 ## 📦 Dependencies

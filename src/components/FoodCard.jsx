@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 export const FoodCard = ({ item }) => {
   const { food_name, food_image, restaurant_name, star_rating, review_text, _id, location } = item

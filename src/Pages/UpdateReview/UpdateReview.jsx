@@ -1,11 +1,16 @@
 import toast from "react-hot-toast";
-import { useLoaderData } from "react-router";
+import { useLoaderData } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
-import { use } from "react";
+import { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { apiFetch } from "../../utils/api";
+import { DashboardDataContext } from "../../context/DashboardDataContext";
 
 const UpdateReview = () => {
   const data = useLoaderData();
-const {user}=use(AuthContext)
+  const { user } = useContext(AuthContext);
+  const { refresh } = useContext(DashboardDataContext);
+  const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
     
@@ -20,20 +25,18 @@ const {user}=use(AuthContext)
       user: user.email
     };
 
-    fetch(`http://localhost:3000/items/${data._id}`, {
+    apiFetch(`/details/${data._id}`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify(formData),
     })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
+      .then(() => {
         toast.success("Successfully updated!");
+        refresh();
+        navigate("/dashboard/reviews");
       })
       .catch((err) => {
         console.log(err);
+        toast.error("Failed to update");
       });
   };
 
