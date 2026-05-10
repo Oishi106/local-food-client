@@ -195,46 +195,159 @@ const Home = () => {
         </div>
       </div>
 
-      {/* ── Intro ─────────────────────────────────── */}
-      <Reveal className="mx-auto max-w-6xl px-4 pt-12">
-        <section id="intro"
-          className="hero-mesh rounded-3xl border border-base-200 p-10 md:p-14 text-center shadow-sm overflow-hidden relative">
-          {/* floating food emojis */}
-          <div className="absolute top-6 left-8 text-3xl opacity-20 float" style={{ animationDelay: "0s" }}>🍜</div>
-          <div className="absolute top-10 right-12 text-2xl opacity-20 float" style={{ animationDelay: "1.5s" }}>🍕</div>
-          <div className="absolute bottom-8 left-16 text-2xl opacity-15 float" style={{ animationDelay: "0.8s" }}>🥗</div>
-          <div className="absolute bottom-6 right-8 text-3xl opacity-15 float" style={{ animationDelay: "2.2s" }}>🍔</div>
-          <div className="relative z-10 mx-auto max-w-3xl space-y-6">
-            <div className="inline-flex items-center gap-2 bg-white/60 dark:bg-white/5 backdrop-blur border border-base-200 rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-accent">
-              🍽️ Bangladesh's Food Community
+  {/* ── Intro / Hero Section ─────────────────────────────────── */}
+<Reveal className="mx-auto max-w-6xl px-4 pt-12">
+  <section
+    id="intro"
+    className="relative overflow-hidden rounded-3xl border border-base-200 shadow-sm"
+  >
+    {/* Background */}
+    <div className="absolute inset-0" style={{ background: "var(--surface-1)" }} />
+    <div
+      className="absolute inset-y-0 right-0 w-[42%] hidden lg:block"
+      style={{
+        background: "linear-gradient(135deg, rgba(226,98,73,0.07) 0%, rgba(212,175,55,0.05) 100%)",
+      }}
+    />
+
+    {/* Blobs */}
+    <div className="absolute -top-20 -right-20 w-80 h-80 rounded-full pointer-events-none"
+      style={{ background: "radial-gradient(circle, rgba(226,98,73,0.12) 0%, transparent 70%)" }} />
+    <div className="absolute -bottom-24 left-4 w-64 h-64 rounded-full pointer-events-none"
+      style={{ background: "radial-gradient(circle, rgba(212,175,55,0.08) 0%, transparent 70%)" }} />
+
+    {/* ── Main grid ── */}
+    <div className="relative z-10 grid lg:grid-cols-[1fr_auto] items-center">
+
+      {/* LEFT: Text */}
+      <div className="p-8 md:p-12 lg:p-14 flex flex-col gap-5 min-w-0">
+
+        {/* Eyebrow */}
+        <div className="inline-flex items-center self-start gap-2 rounded-full border border-base-200 bg-base-100/80 backdrop-blur px-4 py-1.5 text-xs font-bold uppercase tracking-widest"
+          style={{ color: "rgb(226,98,73)" }}>
+          <span className="w-1.5 h-1.5 rounded-full bg-current animate-pulse" />
+          Bangladesh's Food Community
+        </div>
+
+        {/* Headline */}
+        <div>
+          <h1 className="font-display text-4xl md:text-5xl font-extrabold leading-[1.1] tracking-tight text-heading">
+            Discover the <br />
+            <span className="shimmer-text">Taste of Local</span>
+          </h1>
+          <p className="text-base text-muted max-w-sm leading-relaxed mt-3">
+            Authentic flavors from your neighborhood — curated, reviewed, and loved by the community.
+          </p>
+        </div>
+
+        {/* Trust badges */}
+        <div className="flex flex-wrap gap-2">
+          {[
+            { icon: "🍽️", text: "Curated dishes" },
+            { icon: "⭐", text: "Community reviews" },
+            { icon: "❤️", text: "Save favourites" },
+          ].map((b) => (
+            <span key={b.text}
+              className="flex items-center gap-1.5 rounded-xl border border-base-200 bg-base-100/70 px-3 py-1.5 text-xs font-semibold text-heading">
+              {b.icon} {b.text}
+            </span>
+          ))}
+        </div>
+
+        {/* CTAs */}
+        <div className="flex flex-wrap gap-3">
+          <NavLink to="/all-items"
+            className="inline-flex items-center gap-2 rounded-2xl px-7 py-3 text-sm font-bold text-white transition-all hover:-translate-y-0.5 hover:shadow-lg"
+            style={{ background: "rgb(226,98,73)" }}>
+            Explore Foods →
+          </NavLink>
+          <NavLink to="/all-reviews"
+            className="inline-flex items-center gap-2 rounded-2xl border border-base-200 bg-base-100/60 px-7 py-3 text-sm font-semibold backdrop-blur hover:bg-base-200/60 transition-colors">
+            Read Reviews
+          </NavLink>
+        </div>
+
+        {/* Stats row */}
+        <div className="flex items-center gap-0 pt-2 border-t border-base-200 w-fit">
+          {[
+            { val: "12k+", label: "Happy Customers" },
+            { val: "3.8k", label: "Food Items" },
+            { val: "25k+", label: "Reviews" },
+          ].map((s, i) => (
+            <div key={s.label} className="flex items-center">
+              {i > 0 && <div className="w-px h-8 bg-base-200 mx-5" />}
+              <div>
+                <div className="text-lg font-extrabold text-heading leading-none">{s.val}</div>
+                <div className="text-[11px] text-muted mt-0.5">{s.label}</div>
+              </div>
             </div>
-            <h1 className="font-display text-4xl md:text-5xl font-extrabold leading-tight">
-              Welcome to <span className="shimmer-text">FoodNest</span>
-            </h1>
-            <p className="text-base md:text-lg text-muted max-w-xl mx-auto leading-relaxed">
-              Your gateway to authentic local flavors. Discover, review, and save the best food in your city.
-            </p>
-            <div className="flex flex-wrap gap-2 justify-center">
-              {["Curated local dishes", "Community reviews", "Save favourites"].map(badge => (
-                <span key={badge}
-                  className="rounded-full border border-base-200 bg-accent-10 px-4 py-1.5 text-xs font-semibold text-accent">
-                  ✦ {badge}
-                </span>
-              ))}
-            </div>
-            <div className="flex flex-wrap gap-3 justify-center pt-2">
-              <NavLink to="/all-items"
-                className="btn-brand inline-flex w-auto px-8 py-3 rounded-2xl text-sm pulse-glow">
-                Explore Foods →
-              </NavLink>
-              <NavLink to="/all-reviews"
-                className="inline-flex items-center gap-2 px-8 py-3 rounded-2xl text-sm font-semibold border border-base-200 hover:bg-base-200/60 transition-colors">
-                Read Reviews
-              </NavLink>
+          ))}
+        </div>
+      </div>
+
+      {/* RIGHT: Visual collage — fixed width so it never overflows */}
+      <div className="hidden lg:block relative shrink-0" style={{ width: "420px", height: "480px" }}>
+
+        {/* Main food card */}
+        <div className="absolute rounded-2xl overflow-hidden shadow-2xl"
+          style={{ width: "220px", height: "290px", top: "80px", left: "60px",
+            transform: "rotate(2deg)", transition: "transform 0.5s ease" }}
+          onMouseEnter={e => e.currentTarget.style.transform = "rotate(0deg)"}
+          onMouseLeave={e => e.currentTarget.style.transform = "rotate(2deg)"}>
+          <img src="https://images.unsplash.com/photo-1546069901-eacef0df6022?w=500&h=700&fit=crop"
+            alt="Biryani" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          <div className="absolute bottom-3 left-3 right-3">
+            <div className="text-white text-sm font-bold">Chicken Biryani</div>
+            <div className="flex items-center gap-1 mt-0.5">
+              <span className="text-amber-400 text-xs">★★★★★</span>
+              <span className="text-white/70 text-xs">4.9</span>
             </div>
           </div>
-        </section>
-      </Reveal>
+        </div>
+
+        {/* Secondary card */}
+        <div className="absolute rounded-2xl overflow-hidden shadow-xl"
+          style={{ width: "150px", height: "175px", top: "24px", right: "24px",
+            transform: "rotate(-3deg)", transition: "transform 0.5s ease" }}
+          onMouseEnter={e => e.currentTarget.style.transform = "rotate(0deg)"}
+          onMouseLeave={e => e.currentTarget.style.transform = "rotate(-3deg)"}>
+          <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=300&h=450&fit=crop"
+            alt="Seafood" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+          <div className="absolute bottom-2 left-2 right-2 text-white text-xs font-semibold">
+            Grilled Seafood
+          </div>
+        </div>
+
+        {/* Floating review badge */}
+        <div className="absolute z-20 rounded-2xl border border-base-200 bg-base-100/95 backdrop-blur p-3 shadow-xl float"
+          style={{ bottom: "48px", right: "16px", width: "160px", animationDelay: "1s" }}>
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0"
+              style={{ background: "rgb(226,98,73)" }}>R</div>
+            <div>
+              <div className="text-xs font-bold text-heading">Rafiul K.</div>
+              <div className="text-amber-400 text-[10px]">★★★★★</div>
+            </div>
+          </div>
+          <p className="text-[10px] text-muted mt-1.5 leading-relaxed">
+            "Best biryani I've ever had!"
+          </p>
+        </div>
+
+        {/* Floating orders badge */}
+        <div className="absolute z-20 rounded-2xl border border-base-200 bg-base-100/95 backdrop-blur px-3 py-2.5 shadow-lg float"
+          style={{ top: "24px", left: "16px", animationDelay: "0.5s" }}>
+          <div className="text-[10px] text-muted font-medium">Today's orders</div>
+          <div className="text-xl font-extrabold text-heading">1,284</div>
+          <div className="text-[10px] font-semibold" style={{ color: "#16a34a" }}>↑ 12% from yesterday</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+</Reveal>
 
       {/* ── Top Rated ─────────────────────────────── */}
       <Reveal className="mx-auto max-w-6xl px-4 pt-8 pb-12">
