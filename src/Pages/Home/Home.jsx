@@ -177,7 +177,7 @@ const chefs = [
 const Home = () => {
   const data = useLoaderData() || [];
 
-  return (
+  return (                      
     <main>
       <Banner />
 
