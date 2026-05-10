@@ -249,8 +249,8 @@ const Home = () => {
               View all →
             </NavLink>
           </div>
-          <div className="grid grid-cols-2 gap-3 lg:grid-cols-3">
-            {Array.isArray(data) ? data.map(item => <FoodCard key={item._id} item={item} />) : null}
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+            {Array.isArray(data) ? data.slice(0, 8).map(item => <FoodCard key={item._id} item={item} />) : null}
           </div>
           {Array.isArray(data) && data.length === 0 && (
             <div className="text-center py-10 text-muted text-sm">No food items yet.</div>
