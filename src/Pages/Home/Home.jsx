@@ -196,7 +196,8 @@ const Home = () => {
       </div>      
 
   {/* ── Intro / Hero Section ─────────────────────────────────── */}
-<Reveal className="mx-auto max-w-6xl px-4 pt-12">
+<section className="w-screen relative left-1/2 right-1/2 -mx-[50vw] brand-mesh py-12 md:py-16">
+  <Reveal className="mx-auto max-w-6xl px-4 pt-12">
   <section
     id="intro"
     className="relative overflow-hidden rounded-3xl border border-base-200 shadow-sm"
@@ -348,6 +349,7 @@ const Home = () => {
     </div>
   </section>
 </Reveal>
+</section>
 
       {/* ── Top Rated ─────────────────────────────── */}
       <Reveal className="mx-auto max-w-6xl px-4 pt-8 pb-12">
