@@ -24,7 +24,7 @@ import UpdateReview from "../Pages/UpdateReview/UpdateReview";
 import AdminManageUsers from "../Pages/Dashboard/AdminManageUsers";
 import AdminManageProducts from "../Pages/Dashboard/AdminManageProducts";
 import AdminAllBookings from "../Pages/Dashboard/AdminAllBookings";
-import { API_BASE_URL } from "../utils/api";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 import { Navigate } from "react-router-dom";
 
 export const router = createBrowserRouter([
@@ -35,7 +35,7 @@ export const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
-        loader: () => fetch('http://localhost:3000/details')
+        loader: () => fetch('http://localhost:3000/top_rated-items')
       },
       {
         path: "*",

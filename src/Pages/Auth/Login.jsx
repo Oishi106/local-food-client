@@ -170,9 +170,9 @@ const Login = () => {
             <button
               type="button"
               onClick={handleGoogleSignIn}
-              className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl border border-base-200 text-sm font-semibold hover:bg-base-200/50 transition-all duration-200 hover:-translate-y-0.5"
+              className="group w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl border border-base-200 text-sm font-semibold transition-all duration-200 hover:-translate-y-0.5 hover:bg-base-200/50 hover:border-[rgb(226,98,73)]/40 hover:text-[rgb(226,98,73)] hover:shadow-md"
             >
-              <FaGoogle className="text-red-500" />
+              <FaGoogle className="text-red-500 transition-colors duration-200 group-hover:text-[rgb(226,98,73)]" />
               Continue with Google
             </button>
           </div>

@@ -7,6 +7,7 @@ import {
   IoHomeOutline, IoReceiptOutline, IoCardOutline,
   IoStarOutline, IoPeopleOutline, IoRestaurantOutline,
   IoListOutline, IoLogOutOutline, IoMenuOutline,
+  IoHeartOutline,
   IoMoonOutline, IoSunnyOutline, IoChevronForwardOutline
 } from "react-icons/io5";
 import { FaShieldAlt } from "react-icons/fa";
@@ -16,6 +17,7 @@ const NAV_ICONS = {
   "My Bookings": <IoReceiptOutline size={18} />,
   "Payment History": <IoCardOutline size={18} />,
   "My Reviews": <IoStarOutline size={18} />,
+  "My Favourite": <IoHeartOutline size={18} />,
   "Manage Users": <IoPeopleOutline size={18} />,
   "Manage Products": <IoRestaurantOutline size={18} />,
   "All Bookings": <IoListOutline size={18} />,
@@ -41,6 +43,7 @@ export default function DashboardLayout() {
       { to: "/dashboard/bookings", label: "My Bookings" },
       { to: "/dashboard/payments", label: "Payment History" },
       { to: "/dashboard/reviews", label: "My Reviews" },
+      { to: "/dashboard/favourites", label: "My Favourite" },
     ];
     const adminItems = [
       { to: "/dashboard/overview", label: "Overview" },
