@@ -185,7 +185,7 @@ const Home = () => {
       <div className="border-y border-base-200 overflow-hidden bg-base-100/60 backdrop-blur">
         <div className="flex items-center gap-3 py-3 px-4 overflow-x-auto scrollbar-hide whitespace-nowrap">
           <span className="text-xs font-bold uppercase tracking-widest text-muted shrink-0">Trending</span>
-          <div className="w-px h-4 bg-base-200 shrink-0" />
+          <div className="w-px h-4 bg-base-200 shrink-0" />       
           {TRENDING.map(tag => (
             <button key={tag}
               className="chip-dark shrink-0 px-3.5 py-1.5 rounded-full text-xs font-semibold hover:bg-accent hover:text-white hover:border-transparent transition-all duration-200">
@@ -193,7 +193,7 @@ const Home = () => {
             </button>
           ))}
         </div>
-      </div>
+      </div>      
 
   {/* ── Intro / Hero Section ─────────────────────────────────── */}
 <Reveal className="mx-auto max-w-6xl px-4 pt-12">
