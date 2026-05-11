@@ -105,7 +105,7 @@ export default function DashboardLayout() {
           <NavLink
             key={item.to}
             to={item.to}
-            end={item.to === "/dashboard/overview"}
+            end={item.to === "/dashboard/overview" || item.to === "/dashboard/reviews" || item.to === "/dashboard/reviews/add" || item.to === "/dashboard/favourites"}
             onClick={() => setSidebarOpen(false)}
             className={({ isActive }) =>
               `dash-nav-item ${isActive ? "active" : ""}`
