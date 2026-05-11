@@ -63,9 +63,9 @@ export default function DashboardLayout() {
       {/* Brand */}
       <div className="p-5 border-b border-base-200">
         <Link to="/" className="flex items-center gap-3" onClick={() => setSidebarOpen(false)}>
-          <img className="w-9" src="/lo.png" alt="FoodNest" />
+          <img className="w-[80px] h-[63px] object-contain" src="/lo.png" alt="FoodNest" />
           <div>
-            <div className="text-lg font-extrabold" style={{ color: "rgb(226,98,73)" }}>FoodNest</div>
+            <div className="text-xl font-extrabold" style={{ color: "rgb(226,98,73)" }}>FoodNest</div>
             <div className="text-xs opacity-50 font-medium -mt-0.5">Dashboard</div>
           </div>
         </Link>
