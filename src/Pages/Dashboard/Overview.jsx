@@ -6,7 +6,6 @@ import {
 } from "recharts";
 import { AuthContext } from "../../context/AuthContext";
 import { DashboardDataContext } from "../../context/DashboardDataContext";
-import { useUserRole } from "../../hooks/useUserRole";
 import { apiFetch } from "../../utils/api";
 import {
   IoPeopleOutline, IoStarOutline, IoRestaurantOutline,
@@ -77,8 +76,7 @@ const CUSTOM_TOOLTIP = ({ active, payload, label }) => {
 export default function Overview() {
   const { user } = useContext(AuthContext);
   const { refreshKey } = useContext(DashboardDataContext);
-  const { role } = useUserRole();
-  const isAdmin = role === "admin";
+  const isAdmin = false;
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -220,18 +218,13 @@ export default function Overview() {
       <div className="animate-fade-in-up flex items-start justify-between flex-wrap gap-3">
         <div>
           <h1 className="font-display text-2xl md:text-3xl font-bold">
-            {isAdmin ? "Admin Overview" : "My Dashboard"}
+            My Dashboard
           </h1>
           <p className="text-sm opacity-50 mt-1 flex items-center gap-1.5">
             <IoTimeOutline size={14} />
             Real data from your reviews and favourites
           </p>
         </div>
-        {isAdmin && (
-          <span className="badge-premium flex items-center gap-1.5">
-            ⚡ Admin Access
-          </span>
-        )}
       </div>
 
       {/* Metric cards */}
@@ -392,34 +385,18 @@ export default function Overview() {
       <div className="bg-base-100 rounded-2xl border border-base-200 p-5 animate-fade-in-up stagger-4">
         <h2 className="font-semibold text-base mb-4">Quick Actions</h2>
         <div className="flex flex-wrap gap-3">
-          {isAdmin ? (
-            <>
-              <a href="/dashboard/manage-users" className="px-4 py-2 rounded-xl text-sm font-semibold border border-base-200 hover:bg-base-200/70 transition-colors flex items-center gap-2">
-                <IoPeopleOutline size={16} /> Manage Users
-              </a>
-              <a href="/dashboard/manage-products" className="px-4 py-2 rounded-xl text-sm font-semibold border border-base-200 hover:bg-base-200/70 transition-colors flex items-center gap-2">
-                <IoRestaurantOutline size={16} /> Manage Products
-              </a>
-              <a href="/dashboard/all-bookings" className="px-4 py-2 rounded-xl text-sm font-semibold border border-base-200 hover:bg-base-200/70 transition-colors flex items-center gap-2">
-                <IoListOutline size={16} /> All Bookings
-              </a>
-            </>
-          ) : (
-            <>
-              <a href="/all-items" className="px-4 py-2 rounded-xl text-sm font-semibold border border-base-200 hover:bg-base-200/70 transition-colors flex items-center gap-2">
-                <IoRestaurantOutline size={16} /> Browse Foods
-              </a>
-              <a href="/dashboard/reviews/add" className="px-4 py-2 rounded-xl text-sm font-semibold border border-base-200 hover:bg-base-200/70 transition-colors flex items-center gap-2">
-                <IoAddOutline size={16} /> Write Review
-              </a>
-              <a href="/dashboard/reviews" className="px-4 py-2 rounded-xl text-sm font-semibold border border-base-200 hover:bg-base-200/70 transition-colors flex items-center gap-2">
-                <IoStarOutline size={16} /> My Reviews
-              </a>
-              <a href="/dashboard/favourites" className="px-4 py-2 rounded-xl text-sm font-semibold border border-base-200 hover:bg-base-200/70 transition-colors flex items-center gap-2">
-                <IoHeartOutline size={16} /> My Favourites
-              </a>
-            </>
-          )}
+          <a href="/all-items" className="px-4 py-2 rounded-xl text-sm font-semibold border border-base-200 hover:bg-base-200/70 transition-colors flex items-center gap-2">
+            <IoRestaurantOutline size={16} /> Browse Foods
+          </a>
+          <a href="/dashboard/reviews/add" className="px-4 py-2 rounded-xl text-sm font-semibold border border-base-200 hover:bg-base-200/70 transition-colors flex items-center gap-2">
+            <IoAddOutline size={16} /> Write Review
+          </a>
+          <a href="/dashboard/reviews" className="px-4 py-2 rounded-xl text-sm font-semibold border border-base-200 hover:bg-base-200/70 transition-colors flex items-center gap-2">
+            <IoStarOutline size={16} /> My Reviews
+          </a>
+          <a href="/dashboard/favourites" className="px-4 py-2 rounded-xl text-sm font-semibold border border-base-200 hover:bg-base-200/70 transition-colors flex items-center gap-2">
+            <IoHeartOutline size={16} /> My Favourites
+          </a>
         </div>
       </div>
     </div>

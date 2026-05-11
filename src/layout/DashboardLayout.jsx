@@ -1,29 +1,23 @@
 import { useContext, useMemo, useState } from "react";
 import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
-import { useUserRole } from "../hooks/useUserRole";
 import DashboardDataProvider from "../context/DashboardDataContext";
 import {
-  IoHomeOutline, IoStarOutline, IoPeopleOutline, IoRestaurantOutline,
-  IoListOutline, IoLogOutOutline, IoMenuOutline,
+  IoHomeOutline, IoStarOutline, IoRestaurantOutline,
+  IoLogOutOutline, IoMenuOutline,
   IoMoonOutline, IoSunnyOutline, IoChevronForwardOutline,
-  IoHeartOutline, IoAddOutline, IoPencilOutline
+  IoHeartOutline, IoAddOutline
 } from "react-icons/io5";
-import { FaShieldAlt } from "react-icons/fa";
 
 const NAV_ICONS = {
   "Overview": <IoHomeOutline size={18} />,
   "My Reviews": <IoStarOutline size={18} />,
   "Write Review": <IoAddOutline size={18} />,
   "My Favourites": <IoHeartOutline size={18} />,
-  "Manage Users": <IoPeopleOutline size={18} />,
-  "Manage Products": <IoRestaurantOutline size={18} />,
-  "All Bookings": <IoListOutline size={18} />,
 };
 
 export default function DashboardLayout() {
   const { user, signOutUser } = useContext(AuthContext);
-  const { role } = useUserRole();
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light");
@@ -36,34 +30,31 @@ export default function DashboardLayout() {
   };
 
   const menuItems = useMemo(() => {
-    const userItems = [
+    return [
       { to: "/dashboard/overview", label: "Overview" },
       { to: "/dashboard/reviews", label: "My Reviews" },
       { to: "/dashboard/reviews/add", label: "Write Review" },
       { to: "/dashboard/favourites", label: "My Favourites" },
     ];
-    const adminItems = [
-      { to: "/dashboard/overview", label: "Overview" },
-      { to: "/dashboard/manage-users", label: "Manage Users" },
-      { to: "/dashboard/manage-products", label: "Manage Products" },
-      { to: "/dashboard/all-bookings", label: "All Bookings" },
-    ];
-    return role === "admin" ? adminItems : userItems;
-  }, [role]);
+  }, []);
 
   const handleLogout = async () => {
     await signOutUser();
     navigate("/");
   };
 
-  const isAdmin = role === "admin";
-
   const Sidebar = () => (
     <aside className="w-72 min-h-full flex flex-col border-r border-base-200 bg-base-100">
       {/* Brand */}
       <div className="p-5 border-b border-base-200">
         <Link to="/" className="flex items-center gap-3" onClick={() => setSidebarOpen(false)}>
-          <img className="w-[80px] h-[63px] object-contain" src="/lo.png" alt="FoodNest" />
+          <div style={{ width: "82px", height: "66px" }}>
+            <img
+              src="/lo.png"
+              alt="FoodNest"
+              className="w-full h-full object-contain"
+            />
+          </div>
           <div>
             <div className="text-xl font-extrabold" style={{ color: "rgb(226,98,73)" }}>FoodNest</div>
             <div className="text-xs opacity-50 font-medium -mt-0.5">Dashboard</div>
@@ -89,17 +80,14 @@ export default function DashboardLayout() {
           </div>
         </div>
         <div className="mt-3 flex items-center justify-between">
-          <span className={isAdmin ? "role-admin" : "role-user"}>
-            {isAdmin ? "⚡ Admin" : "👤 User"}
-          </span>
-          {isAdmin && <span className="badge-premium">Premium</span>}
+          <span className="role-user">👤 User</span>
         </div>
       </div>
 
       {/* Nav */}
       <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
         <div className="text-xs font-bold uppercase tracking-widest opacity-40 px-3 mb-2 mt-1">
-          {isAdmin ? "Admin Menu" : "My Account"}
+          My Account
         </div>
         {menuItems.map((item) => (
           <NavLink
@@ -178,7 +166,7 @@ export default function DashboardLayout() {
             {/* Page title area */}
             <div className="flex-1 min-w-0">
               <div className="text-sm font-semibold opacity-50 hidden sm:block">
-                {isAdmin ? "Admin" : "User"} Dashboard
+                User Dashboard
               </div>
             </div>
 

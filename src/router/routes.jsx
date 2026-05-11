@@ -6,7 +6,6 @@ import Profile from "../Pages/Profile/Profile";
 import Login from "../Pages/Auth/Login";
 import Register from "../Pages/Auth/Registration";
 import PrivateRoute from "./PrivateRoute";
-import RoleRoute from "./RoleRoute";
 import MyDownloads from "../Pages/MyDownloads/MyDownloads";
 import ErrorPage from "../components/ErrorPage";
 import AllItems from "../Pages/AllItems/AllItems";
@@ -19,9 +18,6 @@ import Overview from "../Pages/Dashboard/Overview";
 import MyReviewsDashboard from "../Pages/Dashboard/MyReviewsDashboard";
 import AddReviews from "../Pages/AddReviews/AddReviews";
 import UpdateReview from "../Pages/UpdateReview/UpdateReview";
-import AdminManageUsers from "../Pages/Dashboard/AdminManageUsers";
-import AdminManageProducts from "../Pages/Dashboard/AdminManageProducts";
-import AdminAllBookings from "../Pages/Dashboard/AdminAllBookings";
 const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
 import { Navigate } from "react-router-dom";
 
@@ -120,69 +116,24 @@ export const router = createBrowserRouter([
       },
       {
         path: "/dashboard/overview",
-        element: (
-          <RoleRoute allow={["user", "admin"]}>
-            <Overview />
-          </RoleRoute>
-        ),
+        element: <Overview />,
       },
       {
         path: "/dashboard/reviews",
-        element: (
-          <RoleRoute allow={["user"]}>
-            <MyReviewsDashboard />
-          </RoleRoute>
-        ),
+        element: <MyReviewsDashboard />,
       },
       {
         path: "/dashboard/reviews/add",
-        element: (
-          <RoleRoute allow={["user"]}>
-            <AddReviews />
-          </RoleRoute>
-        ),
+        element: <AddReviews />,
       },
       {
         path: "/dashboard/favourites",
-        element: (
-          <RoleRoute allow={["user"]}>
-            <MyFavourites />
-          </RoleRoute>
-        ),
+        element: <MyFavourites />,
       },
       {
         path: "/dashboard/reviews/:id/edit",
-        element: (
-          <RoleRoute allow={["user"]}>
-            <UpdateReview />
-          </RoleRoute>
-        ),
+        element: <UpdateReview />,
         loader: ({ params }) => fetch(`${API_BASE_URL}/details/${params.id}`),
-      },
-
-      {
-        path: "/dashboard/manage-users",
-        element: (
-          <RoleRoute allow={["admin"]}>
-            <AdminManageUsers />
-          </RoleRoute>
-        ),
-      },
-      {
-        path: "/dashboard/manage-products",
-        element: (
-          <RoleRoute allow={["admin"]}>
-            <AdminManageProducts />
-          </RoleRoute>
-        ),
-      },
-      {
-        path: "/dashboard/all-bookings",
-        element: (
-          <RoleRoute allow={["admin"]}>
-            <AdminAllBookings />
-          </RoleRoute>
-        ),
       },
       {
         path: "*",

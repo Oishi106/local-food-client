@@ -1,14 +1,13 @@
 import { useContext, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
-import { FaGoogle, FaShieldAlt, FaUser } from "react-icons/fa";
+import { FaGoogle } from "react-icons/fa";
 import { IoRestaurantOutline } from "react-icons/io5";
 
 const Login = () => {
   const { signInUser, signInWithGoogle } = useContext(AuthContext);
   const location = useLocation();
   const navigate = useNavigate();
-  const [role, setRole] = useState("user"); // "user" | "admin"
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -22,7 +21,7 @@ const Login = () => {
     signInUser(email, password)
       .then((result) => {
         event.target.reset();
-        navigate(location.state?.from || (role === "admin" ? "/dashboard/manage-users" : "/dashboard/overview"));
+        navigate(location.state?.from || "/dashboard/overview");
       })
       .catch((err) => {
         setError("Invalid email or password. Please try again.");
@@ -64,49 +63,6 @@ const Login = () => {
 
         {/* Card */}
         <div className="rounded-2xl shadow-2xl border border-base-200 bg-base-100 overflow-hidden animate-fade-in-up stagger-1">
-          {/* Role toggle header */}
-          <div className="p-5 pb-0">
-            <div className="role-toggle">
-              <button
-                type="button"
-                className={`role-toggle-btn ${role === "user" ? "active" : ""}`}
-                onClick={() => setRole("user")}
-              >
-                <span className="flex items-center justify-center gap-2">
-                  <FaUser size={12} />
-                  User Login
-                </span>
-              </button>
-              <button
-                type="button"
-                className={`role-toggle-btn ${role === "admin" ? "active" : ""}`}
-                onClick={() => setRole("admin")}
-              >
-                <span className="flex items-center justify-center gap-2">
-                  <FaShieldAlt size={12} />
-                  Admin Login
-                </span>
-              </button>
-            </div>
-          </div>
-
-          {/* Role hint */}
-          <div className="px-5 pt-3">
-            <div className={`flex items-center gap-2 text-xs px-3 py-2 rounded-lg ${
-              role === "admin"
-                ? "bg-orange-50 text-orange-700 border border-orange-200"
-                : "bg-blue-50 text-blue-700 border border-blue-200"
-            }`}
-              style={role === "admin"
-                ? { background: "rgba(226,98,73,0.07)", color: "rgb(180,70,50)", borderColor: "rgba(226,98,73,0.2)" }
-                : {}}>
-              {role === "admin" ? <FaShieldAlt size={11} /> : <FaUser size={11} />}
-              {role === "admin"
-                ? "Admin credentials provide full dashboard access."
-                : "Signing in as a regular user."}
-            </div>
-          </div>
-
           {/* Form */}
           <form onSubmit={handleLogIn} className="p-5 space-y-4">
             <div>
@@ -151,7 +107,7 @@ const Login = () => {
                   Signing in...
                 </span>
               ) : (
-                `Sign in as ${role === "admin" ? "Admin" : "User"}`
+                "Sign in"
               )}
             </button>
           </form>
