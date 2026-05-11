@@ -36,7 +36,7 @@ export const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
-        loader: () => fetch(`${API}/top_rated-items`).then(r => r.json()),
+        loader: () => fetch(`${API}/details`).then(r => r.json()),
       },
       {
         path: "*",
