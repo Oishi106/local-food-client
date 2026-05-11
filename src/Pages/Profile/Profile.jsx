@@ -1,6 +1,8 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
+import { apiFetch } from "../../utils/api";
 import {
   IoLocationOutline, IoMailOutline, IoShieldCheckmarkOutline,
   IoStarSharp, IoHeartOutline, IoBookmarkOutline,
@@ -27,14 +29,46 @@ const ACHIEVEMENTS = [
 ];
 
 const STATS = [
-  { icon: <IoStarSharp    size={18} />, label: "Reviews",    value: "24",  color: "#f59e0b" },
-  { icon: <IoHeartOutline size={18} />, label: "Favourites", value: "12",  color: BRAND      },
-  { icon: <IoRestaurantOutline size={18} />, label: "Places Visited", value: "38", color: "#10b981" },
+  { icon: <IoStarSharp    size={18} />, label: "Reviews",    color: "#f59e0b" },
+  { icon: <IoHeartOutline size={18} />, label: "Favourites", color: BRAND      },
+  { icon: <IoRestaurantOutline size={18} />, label: "Places Visited", color: "#10b981" },
 ];
 
+const LS_KEY = "fn_favourites";
+
+const readFavs = () => {
+  try {
+    return JSON.parse(localStorage.getItem(LS_KEY) || "[]");
+  } catch {
+    return [];
+  }
+};
+
+const formatActivityTime = (value) => {
+  if (!value) return "Recently";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Recently";
+  const diff = Date.now() - date.getTime();
+  const minutes = Math.floor(diff / 60000);
+  const hours = Math.floor(diff / 3600000);
+  const days = Math.floor(diff / 86400000);
+  if (minutes < 60) return `${Math.max(1, minutes)}m ago`;
+  if (hours < 24) return `${hours}h ago`;
+  if (days < 7) return `${days}d ago`;
+  return date.toLocaleDateString("en-BD", { month: "short", day: "numeric" });
+};
+
 const Profile = () => {
-  const { user } = useContext(AuthContext);
+  const { user, updateUserProfile } = useContext(AuthContext);
   const [activeTab, setActiveTab] = useState("about");
+  const [editOpen, setEditOpen] = useState(false);
+  const [displayNameInput, setDisplayNameInput] = useState("");
+  const [photoInput, setPhotoInput] = useState("");
+  const [savingProfile, setSavingProfile] = useState(false);
+  const [reviews, setReviews] = useState([]);
+  const [loadingActivity, setLoadingActivity] = useState(true);
+  const [activityError, setActivityError] = useState("");
+  const [favourites, setFavourites] = useState(readFavs);
 
   const displayName = user?.displayName || "Anonymous Foodie";
   const email       = user?.email       || "No email provided";
@@ -42,6 +76,108 @@ const Profile = () => {
     "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=400";
 
   const initials = displayName.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase();
+
+  useEffect(() => {
+    setDisplayNameInput(displayName);
+    setPhotoInput(user?.photoURL || "");
+  }, [displayName, user?.photoURL]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function run() {
+      if (!user?.email) {
+        setReviews([]);
+        setLoadingActivity(false);
+        return;
+      }
+
+      setLoadingActivity(true);
+      setActivityError("");
+      try {
+        const data = await apiFetch(`/my-reviews?email=${encodeURIComponent(user.email)}`);
+        if (cancelled) return;
+        setReviews(Array.isArray(data) ? data : data?.data || []);
+        setFavourites(readFavs());
+      } catch {
+        if (cancelled) return;
+        setActivityError("Unable to load live activity right now.");
+        setReviews([]);
+      } finally {
+        if (!cancelled) setLoadingActivity(false);
+      }
+    }
+
+    run();
+    return () => { cancelled = true; };
+  }, [user?.email]);
+
+  useEffect(() => {
+    const handleStorage = () => setFavourites(readFavs());
+    window.addEventListener("storage", handleStorage);
+    window.addEventListener("fn:favourites-changed", handleStorage);
+    return () => {
+      window.removeEventListener("storage", handleStorage);
+      window.removeEventListener("fn:favourites-changed", handleStorage);
+    };
+  }, []);
+
+  const stats = useMemo(() => {
+    const uniqueRestaurants = new Set([
+      ...reviews.map((review) => review.restaurant_name).filter(Boolean),
+      ...favourites.map((item) => item.restaurant_name).filter(Boolean),
+    ]).size;
+
+    return [
+      { icon: <IoStarSharp size={18} />, label: "Reviews", value: reviews.length.toString(), color: "#f59e0b" },
+      { icon: <IoHeartOutline size={18} />, label: "Favourites", value: favourites.length.toString(), color: BRAND },
+      { icon: <IoRestaurantOutline size={18} />, label: "Places Visited", value: uniqueRestaurants.toString(), color: "#10b981" },
+    ];
+  }, [reviews, favourites]);
+
+  const recentActivity = useMemo(() => {
+    const reviewActivity = reviews
+      .map((review) => ({
+        type: "review",
+        icon: "⭐",
+        action: "Reviewed",
+        item: review.food_name || "Food item",
+        time: formatActivityTime(review.date || review.createdAt || review.updatedAt),
+        color: "#f59e0b",
+        sortTime: new Date(review.date || review.createdAt || review.updatedAt || 0).getTime(),
+      }))
+      .filter((entry) => entry.item);
+
+    const favouriteActivity = favourites
+      .map((item) => ({
+        type: "favourite",
+        icon: "❤️",
+        action: "Saved",
+        item: item.food_name || "Food item",
+        time: formatActivityTime(item.savedAt),
+        color: "#e05252",
+        sortTime: new Date(item.savedAt || 0).getTime(),
+      }))
+      .filter((entry) => entry.item);
+
+    return [...reviewActivity, ...favouriteActivity]
+      .sort((a, b) => b.sortTime - a.sortTime)
+      .slice(0, 6);
+  }, [reviews, favourites]);
+
+  const handleSaveProfile = async (event) => {
+    event.preventDefault();
+    setSavingProfile(true);
+    try {
+      await updateUserProfile(displayNameInput.trim() || displayName, photoInput.trim() || photoURL);
+      toast.success("Profile updated successfully");
+      setEditOpen(false);
+    } catch (error) {
+      toast.error(error?.message || "Failed to update profile");
+    } finally {
+      setSavingProfile(false);
+    }
+  };
 
   return (
     <div className="min-h-[calc(100vh-80px)] py-10 px-4">
@@ -59,7 +195,11 @@ const Profile = () => {
             <div className="absolute top-4 left-1/3 w-24 h-24 rounded-full opacity-10"
               style={{ background: "radial-gradient(circle, white, transparent)" }} />
             {/* Edit cover btn */}
-            <button className="absolute top-4 right-4 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/15 backdrop-blur border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-colors">
+            <button
+              type="button"
+              onClick={() => setEditOpen(true)}
+              className="absolute top-4 right-4 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/15 backdrop-blur border border-white/25 text-white text-xs font-semibold hover:bg-white/25 transition-colors"
+            >
               <IoPencilOutline size={13} /> Edit Profile
             </button>
           </div>
@@ -135,7 +275,7 @@ const Profile = () => {
 
             {/* Stats row */}
             <div className="mt-6 grid grid-cols-3 gap-3">
-              {STATS.map((s, i) => (
+              {stats.map((s) => (
                 <div key={s.label}
                   className="flex items-center gap-3 p-4 rounded-2xl border border-base-200 bg-base-200/30 hover:bg-base-200/50 transition-colors">
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0"
@@ -157,47 +297,39 @@ const Profile = () => {
 
           {/* Left col — tabs */}
           <div className="lg:col-span-2 space-y-4">
-
-            {/* Tab bar */}
-            <div className="flex gap-1 p-1 rounded-2xl bg-base-200/50 border border-base-200">
+            <div className="flex items-center gap-2 rounded-2xl border border-base-200 bg-base-100 p-1">
               {[
-                { id: "about",    label: "About" },
+                { id: "about", label: "About" },
                 { id: "activity", label: "Activity" },
-              ].map(t => (
-                <button key={t.id} type="button"
-                  onClick={() => setActiveTab(t.id)}
-                  className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-all duration-200
-                    ${activeTab === t.id
-                      ? "bg-base-100 shadow-sm text-heading"
-                      : "text-muted hover:text-heading"}`}>
-                  {t.label}
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex-1 rounded-xl px-4 py-2 text-sm font-semibold transition-colors ${activeTab === tab.id ? "text-white" : "text-muted hover:bg-base-200/60"}`}
+                  style={activeTab === tab.id ? { background: BRAND } : undefined}
+                >
+                  {tab.label}
                 </button>
               ))}
             </div>
 
-            {/* About tab */}
-            {activeTab === "about" && (
-              <div className="bg-base-100 rounded-2xl border border-base-200 p-6 space-y-5 animate-fade-in-up">
-                <div>
-                  <div className="text-xs font-bold uppercase tracking-widest opacity-40 mb-3">Bio</div>
-                  <p className="text-sm text-muted leading-relaxed">
-                    Passionate food explorer based in Bangladesh. I love discovering hidden gems, trying new cuisines, and sharing honest reviews with the FoodNest community. Always on the hunt for the best biryani! 🍛
-                  </p>
-                </div>
-
-                <div className="h-px bg-base-200" />
-
-                <div>
+            {activeTab === "about" ? (
+              <>
+                <div className="bg-base-100 rounded-2xl border border-base-200 p-6 animate-fade-in-up">
                   <div className="text-xs font-bold uppercase tracking-widest opacity-40 mb-3">Account Details</div>
                   <div className="space-y-3">
                     {[
                       { label: "Display Name", value: displayName },
-                      { label: "Email",        value: email },
-                      { label: "Member Since", value: user?.metadata?.creationTime
+                      { label: "Email", value: email },
+                      {
+                        label: "Member Since",
+                        value: user?.metadata?.creationTime
                           ? new Date(user.metadata.creationTime).toLocaleDateString("en-BD", { year: "numeric", month: "long" })
-                          : "—" },
+                          : "—",
+                      },
                       { label: "Account Type", value: "Food Lover" },
-                    ].map(d => (
+                    ].map((d) => (
                       <div key={d.label} className="flex items-start justify-between gap-4 text-sm">
                         <span className="text-muted shrink-0 w-32">{d.label}</span>
                         <span className="font-semibold text-heading text-right break-all">{d.value}</span>
@@ -206,57 +338,68 @@ const Profile = () => {
                   </div>
                 </div>
 
-                <div className="h-px bg-base-200" />
-
-                {/* Quick links */}
-                <div>
+                <div className="bg-base-100 rounded-2xl border border-base-200 p-6 animate-fade-in-up">
                   <div className="text-xs font-bold uppercase tracking-widest opacity-40 mb-3">Quick Links</div>
                   <div className="grid grid-cols-2 gap-2">
                     {[
-                      { to: "/dashboard/reviews",    icon: <IoStarSharp size={14} />,       label: "My Reviews" },
-                      { to: "/dashboard/favourites", icon: <IoHeartOutline size={14} />,    label: "My Favourites" },
-                      { to: "/dashboard/overview",   icon: <IoBookmarkOutline size={14} />, label: "Dashboard" },
-                      { to: "/all-items",            icon: <IoRestaurantOutline size={14} />, label: "Browse Foods" },
-                    ].map(l => (
-                      <Link key={l.to} to={l.to}
-                        className="flex items-center gap-2 px-4 py-3 rounded-xl border border-base-200 text-sm font-semibold hover:bg-base-200/60 transition-colors text-heading">
+                      { to: "/dashboard/reviews", icon: <IoStarSharp size={14} />, label: "My Reviews" },
+                      { to: "/dashboard/favourites", icon: <IoHeartOutline size={14} />, label: "My Favourites" },
+                      { to: "/dashboard/overview", icon: <IoBookmarkOutline size={14} />, label: "Dashboard" },
+                      { to: "/all-items", icon: <IoRestaurantOutline size={14} />, label: "Browse Foods" },
+                    ].map((l) => (
+                      <Link
+                        key={l.to}
+                        to={l.to}
+                        className="flex items-center gap-2 px-4 py-3 rounded-xl border border-base-200 text-sm font-semibold hover:bg-base-200/60 transition-colors text-heading"
+                      >
                         <span style={{ color: BRAND }}>{l.icon}</span>
                         {l.label}
                       </Link>
                     ))}
                   </div>
                 </div>
-              </div>
-            )}
-
-            {/* Activity tab */}
-            {activeTab === "activity" && (
+              </>
+            ) : (
               <div className="bg-base-100 rounded-2xl border border-base-200 p-6 animate-fade-in-up">
-                <div className="text-xs font-bold uppercase tracking-widest opacity-40 mb-4">Recent Activity</div>
-                <div className="space-y-3">
-                  {[
-                    { icon: "⭐", action: "Reviewed",   item: "Chicken Biryani",    time: "2 days ago",  color: "#f59e0b" },
-                    { icon: "❤️", action: "Saved",       item: "Grilled Seafood",    time: "4 days ago",  color: "#e05252" },
-                    { icon: "✍️", action: "Updated review", item: "Shami Kebab",    time: "1 week ago",  color: BRAND      },
-                    { icon: "🔍", action: "Explored",   item: "Street Food section", time: "2 weeks ago", color: "#6366f1" },
-                  ].map((a, i) => (
-                    <div key={i} className="flex items-center gap-4 p-3.5 rounded-xl border border-base-200 hover:bg-base-200/30 transition-colors">
-                      <div className="w-9 h-9 rounded-xl flex items-center justify-center text-base shrink-0"
-                        style={{ background: a.color + "15" }}>
-                        {a.icon}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-sm font-semibold text-heading">
-                          {a.action} <span className="font-bold">{a.item}</span>
+                <div className="flex items-center justify-between gap-4 mb-4">
+                  <div>
+                    <div className="text-xs font-bold uppercase tracking-widest opacity-40 mb-1">Recent Activity</div>
+                    <p className="text-sm text-muted">Live feed from your reviews and favourites.</p>
+                  </div>
+                  <div className="text-xs font-semibold text-muted">{recentActivity.length} items</div>
+                </div>
+
+                {loadingActivity ? (
+                  <div className="flex items-center gap-3 rounded-xl border border-base-200 px-4 py-5 text-sm text-muted">
+                    <span className="h-4 w-4 animate-spin rounded-full border-2 border-base-200 border-t-[rgb(226,98,73)]" />
+                    Loading live activity...
+                  </div>
+                ) : activityError ? (
+                  <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
+                    {activityError}
+                  </div>
+                ) : recentActivity.length === 0 ? (
+                  <div className="rounded-xl border border-base-200 px-4 py-6 text-center text-sm text-muted">
+                    No recent activity yet. Write a review or save a food to see it here.
+                  </div>
+                ) : (
+                  <div className="space-y-3">
+                    {recentActivity.map((a, i) => (
+                      <div key={`${a.type}-${a.item}-${i}`} className="flex items-center gap-4 p-3.5 rounded-xl border border-base-200 hover:bg-base-200/30 transition-colors">
+                        <div className="w-9 h-9 rounded-xl flex items-center justify-center text-base shrink-0"
+                          style={{ background: a.color + "15" }}>
+                          {a.icon}
                         </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm font-semibold text-heading">
+                            {a.action} <span className="font-bold">{a.item}</span>
+                          </div>
+                        </div>
+                        <div className="text-xs text-muted shrink-0">{a.time}</div>
                       </div>
-                      <div className="text-xs text-muted shrink-0">{a.time}</div>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-4 text-center">
-                  <p className="text-xs text-muted italic">Activity is illustrative — connect your data for live feed.</p>
-                </div>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -330,6 +473,68 @@ const Profile = () => {
         </div>
 
       </div>
+
+      {editOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/55 px-4">
+          <div className="w-full max-w-lg rounded-3xl border border-base-200 bg-base-100 p-6 shadow-2xl">
+            <div className="flex items-start justify-between gap-4 mb-5">
+              <div>
+                <h3 className="text-2xl font-bold text-heading">Edit Profile</h3>
+                <p className="text-sm text-muted mt-1">Update your name and profile photo.</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setEditOpen(false)}
+                className="rounded-full border border-base-200 px-3 py-1.5 text-xs font-semibold text-muted hover:bg-base-200/60"
+              >
+                Close
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveProfile} className="space-y-4">
+              <div>
+                <label className="mb-1.5 block text-sm font-medium text-heading">Display Name</label>
+                <input
+                  type="text"
+                  value={displayNameInput}
+                  onChange={(e) => setDisplayNameInput(e.target.value)}
+                  className="input-premium"
+                  placeholder="Your name"
+                  required
+                />
+              </div>
+              <div>
+                <label className="mb-1.5 block text-sm font-medium text-heading">Photo URL</label>
+                <input
+                  type="url"
+                  value={photoInput}
+                  onChange={(e) => setPhotoInput(e.target.value)}
+                  className="input-premium"
+                  placeholder="https://..."
+                />
+              </div>
+
+              <div className="flex gap-3 pt-1">
+                <button
+                  type="button"
+                  onClick={() => setEditOpen(false)}
+                  className="flex-1 rounded-2xl border border-base-200 px-4 py-3 text-sm font-semibold hover:bg-base-200/60"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={savingProfile}
+                  className="flex-1 rounded-2xl px-4 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 disabled:opacity-60"
+                  style={{ background: BRAND }}
+                >
+                  {savingProfile ? "Saving..." : "Save Changes"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

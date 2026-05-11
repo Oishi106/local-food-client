@@ -16,8 +16,9 @@ const toggleFav = (item) => {
   const exists = favs.some(f => f._id === item._id);
   const next = exists
     ? favs.filter(f => f._id !== item._id)
-    : [...favs, item];
+    : [...favs, { ...item, savedAt: new Date().toISOString() }];
   localStorage.setItem(LS_KEY, JSON.stringify(next));
+  window.dispatchEvent(new Event("fn:favourites-changed"));
   return !exists;
 };
 
@@ -55,7 +56,7 @@ export const FoodCard = ({ item }) => {
           <div className="w-full h-full flex items-center justify-center text-5xl opacity-30">🍽️</div>
         )}
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/50 via-black/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
         {category && (
           <div className="absolute top-3 left-3">

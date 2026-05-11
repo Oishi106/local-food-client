@@ -46,8 +46,22 @@ const AuthProvider = ({ children }) => {
     });
   };
 
-  const updateUserProfile = (displayName, photoURL) => {
-    return updateProfile(auth.currentUser, { displayName, photoURL });
+  const updateUserProfile = async (displayName, photoURL) => {
+    if (!auth.currentUser) {
+      throw new Error("No authenticated user found.");
+    }
+
+    await updateProfile(auth.currentUser, { displayName, photoURL });
+
+    const updatedUser = {
+      ...auth.currentUser,
+      displayName,
+      photoURL,
+    };
+
+    setUser(updatedUser);
+    await saveUserToDB(updatedUser);
+    return updatedUser;
   };
 
   const signOutUser = () => {
