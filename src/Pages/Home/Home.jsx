@@ -27,7 +27,7 @@ const Carousel = () => {
   useEffect(() => {
     const id = setInterval(() => setIndex(p => (p + 1) % reviews.length), 4500);
     return () => clearInterval(id);
-  }, []);
+  }, [reviews.length]);
   const active = reviews[index];
   return (
     <div className="mt-10 rounded-3xl card-surface p-8 md:p-10 shadow-lg relative overflow-hidden">
@@ -99,16 +99,16 @@ const StatCard = ({ label, value, icon, gradient }) => {
   const [count, ref] = useCountUp(num);
   return (
     <div ref={ref}
-      className="group relative bg-white/70 backdrop-blur-md rounded-3xl p-8 text-center shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-white/50 overflow-hidden">
-      <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500`} />
+      className="group relative overflow-hidden rounded-3xl border border-white/55 bg-white/55 p-8 text-center shadow-xl backdrop-blur-xl transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl dark:border-white/12 dark:bg-white/10">
+      <div className={`absolute inset-0 bg-linear-to-br ${gradient} opacity-0 group-hover:opacity-12 transition-opacity duration-500`} />
       <div className="relative z-10">
-        <div className="text-5xl mb-4 transform group-hover:scale-110 transition-transform duration-300">{icon}</div>
-        <div className="text-5xl md:text-6xl font-black text-gray-900 mb-3 tracking-tight tabular-nums">
+        <div className="text-5xl mb-4 transform group-hover:scale-110 transition-transform duration-300 drop-shadow-sm">{icon}</div>
+        <div className="text-5xl md:text-6xl font-black text-gray-900 mb-3 tracking-tight tabular-nums dark:text-white">
           {count.toLocaleString()}{suffix}
         </div>
-        <div className="text-base md:text-lg font-bold text-gray-700">{label}</div>
+        <div className="text-base md:text-lg font-bold text-gray-700 dark:text-white/80">{label}</div>
       </div>
-      <div className="absolute top-0 right-0 w-16 h-16 bg-white/20 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      <div className="absolute top-0 right-0 w-16 h-16 rounded-bl-full bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-white/10" />
     </div>
   );
 };
@@ -119,23 +119,31 @@ const Newsletter = () => {
   const [sent, setSent] = useState(false);
   const submit = (e) => { e.preventDefault(); if (email) { setSent(true); setEmail(""); } };
   return (
-    <section className="w-screen relative left-1/2 right-1/2 -mx-[50vw] py-16 md:py-20 overflow-hidden"
-      style={{ background: "linear-gradient(135deg, rgb(226,98,73), #d4380d, #c41230)" }}>
-      {/* Decorative circles */}
-      <div className="absolute top-0 right-0 w-72 h-72 rounded-full opacity-10 -translate-y-1/2 translate-x-1/4"
-        style={{ background: "radial-gradient(circle, white, transparent)" }} />
-      <div className="absolute bottom-0 left-0 w-56 h-56 rounded-full opacity-10 translate-y-1/3 -translate-x-1/4"
-        style={{ background: "radial-gradient(circle, white, transparent)" }} />
+    <section className="w-screen relative left-1/2 right-1/2 -mx-[50vw] py-16 md:py-20 overflow-hidden">
+      <div className="absolute inset-0">
+        <img
+          src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=1600&h=900&fit=crop"
+          alt="Newsletter background"
+          className="h-full w-full object-cover opacity-22 dark:opacity-14"
+          loading="lazy"
+        />
+        <div className="absolute inset-0 bg-linear-to-br from-[#b62e18]/96 via-[#d7461f]/92 to-[#8e1f3b]/96 dark:from-slate-950/96 dark:via-slate-950/88 dark:to-slate-900/96" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.18),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,0.10),transparent_24%)] dark:bg-[radial-gradient(circle_at_top_left,rgba(226,98,73,0.20),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,0.06),transparent_24%)]" />
+      </div>
+      <div className="absolute top-0 left-0 h-40 w-40 rounded-full bg-white/10 blur-3xl" />
+      <div className="absolute bottom-0 right-0 h-48 w-48 rounded-full bg-white/10 blur-3xl dark:bg-accent/10" />
+      <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/35 to-transparent dark:via-white/10" />
+
       <div className="mx-auto max-w-3xl px-4 text-center relative z-10">
-        <p className="text-sm font-bold uppercase tracking-[0.2em] text-white/70 mb-3">Stay Updated</p>
-        <h2 className="font-display text-3xl md:text-4xl font-extrabold text-white mb-4 leading-tight">
+        <p className="text-sm font-bold uppercase tracking-[0.2em] text-white/80 mb-3">Stay Updated</p>
+        <h2 className="font-display text-3xl md:text-4xl font-extrabold text-white mb-4 leading-tight drop-shadow-[0_2px_18px_rgba(0,0,0,0.28)]">
           Get the tastiest deals<br />straight to your inbox 🍽️
         </h2>
-        <p className="text-white/80 mb-8 text-base max-w-xl mx-auto">
+        <p className="text-white/82 mb-8 text-base max-w-xl mx-auto">
           Weekly curated food discoveries, new restaurant alerts, and exclusive member-only offers.
         </p>
         {sent ? (
-          <div className="inline-flex items-center gap-3 bg-white/20 backdrop-blur text-white rounded-2xl px-6 py-4 font-semibold">
+          <div className="inline-flex items-center gap-3 rounded-2xl border border-white/15 bg-white/15 px-6 py-4 font-semibold text-white backdrop-blur-md">
             <span className="text-2xl">🎉</span> You're on the list! Check your inbox.
           </div>
         ) : (
@@ -146,7 +154,7 @@ const Newsletter = () => {
               onChange={e => setEmail(e.target.value)}
               placeholder="your@email.com"
               required
-              className="flex-1 px-5 py-3.5 rounded-2xl bg-white/15 backdrop-blur border border-white/30 text-white placeholder:text-white/50 focus:outline-none focus:border-white/60 focus:bg-white/20 transition-all text-sm font-medium"
+              className="flex-1 px-5 py-3.5 rounded-2xl bg-white/15 backdrop-blur border border-white/25 text-white placeholder:text-white/50 focus:outline-none focus:border-white/60 focus:bg-white/20 transition-all text-sm font-medium"
             />
             <button type="submit"
               className="px-7 py-3.5 rounded-2xl bg-white text-sm font-bold transition-all hover:bg-white/90 hover:-translate-y-0.5 hover:shadow-lg shrink-0"
@@ -155,7 +163,7 @@ const Newsletter = () => {
             </button>
           </form>
         )}
-        <p className="mt-4 text-white/50 text-xs">No spam. Unsubscribe anytime.</p>
+        <p className="mt-4 text-white/60 text-xs">No spam. Unsubscribe anytime.</p>
       </div>
     </section>
   );
@@ -176,6 +184,11 @@ const chefs = [
 ════════════════════════════════════════════════════ */
 const Home = () => {
   const data = useLoaderData() || [];
+  const topItems = Array.isArray(data)
+    ? [...data]
+        .sort((a, b) => (parseFloat(b.star_rating) || 0) - (parseFloat(a.star_rating) || 0))
+        .slice(0, 8)
+    : [];
 
   return (                      
     <main>
@@ -297,7 +310,7 @@ const Home = () => {
           onMouseLeave={e => e.currentTarget.style.transform = "rotate(2deg)"}>
           <img src="https://images.unsplash.com/photo-1546069901-eacef0df6022?w=500&h=700&fit=crop"
             alt="Biryani" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />
           <div className="absolute bottom-3 left-3 right-3">
             <div className="text-white text-sm font-bold">Chicken Biryani</div>
             <div className="flex items-center gap-1 mt-0.5">
@@ -315,7 +328,7 @@ const Home = () => {
           onMouseLeave={e => e.currentTarget.style.transform = "rotate(-3deg)"}>
           <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=300&h=450&fit=crop"
             alt="Seafood" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-black/50 to-transparent" />
           <div className="absolute bottom-2 left-2 right-2 text-white text-xs font-semibold">
             Grilled Seafood
           </div>
@@ -365,9 +378,9 @@ const Home = () => {
             </NavLink>
           </div>
           <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-            {Array.isArray(data) ? data.slice(0, 8).map(item => <FoodCard key={item._id} item={item} />) : null}
+            {topItems.map(item => <FoodCard key={item._id} item={item} />)}
           </div>
-          {Array.isArray(data) && data.length === 0 && (
+          {topItems.length === 0 && (
             <div className="text-center py-10 text-muted text-sm">No food items yet.</div>
           )}
         </section>
@@ -388,7 +401,7 @@ const Home = () => {
               <div className="relative overflow-hidden rounded-2xl shadow-2xl order-2 lg:order-1 group">
                 <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=800&h=600&fit=crop"
                   alt="Food preparation" className="w-full h-full object-cover aspect-4/3 group-hover:scale-105 transition-transform duration-700" loading="lazy" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-t from-black/30 to-transparent" />
               </div>
               <div className="space-y-4 order-1 lg:order-2">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -482,10 +495,10 @@ const Home = () => {
             ].map(s => (
               <div key={s.n}
                 className="group step-card rounded-2xl p-7 shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 relative overflow-hidden">
-                <div className={`absolute top-0 left-0 w-1 h-full bg-gradient-to-b ${s.bar}`} />
-                <div className={`absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-300 bg-gradient-to-br ${s.color}`} />
+                <div className={`absolute top-0 left-0 w-1 h-full bg-linear-to-b ${s.bar}`} />
+                <div className={`absolute inset-0 opacity-0 group-hover:opacity-5 transition-opacity duration-300 bg-linear-to-br ${s.color}`} />
                 <div className="relative z-10">
-                  <div className={`inline-flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${s.color} text-white font-black text-base mb-5 shadow-md group-hover:shadow-lg group-hover:scale-110 transition-all duration-300`}>
+                  <div className={`inline-flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-br ${s.color} text-white font-black text-base mb-5 shadow-md group-hover:shadow-lg group-hover:scale-110 transition-all duration-300`}>
                     {s.n}
                   </div>
                   <h3 className="text-base font-bold text-heading mb-2">{s.title}</h3>
@@ -551,7 +564,7 @@ const Home = () => {
               <div key={c.name}
                 className="group category-card relative overflow-hidden rounded-2xl shadow-sm hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 cursor-pointer">
                 <img src={c.img} alt={c.name} className="h-40 w-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-linear-to-t from-black/50 via-black/10 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="absolute bottom-0 left-0 right-0 p-4">
                   <div className="inline-flex items-center gap-2 rounded-full bg-white/95 px-3 py-1 text-sm font-semibold text-gray-900 shadow">
                     <span className="h-2 w-2 rounded-full bg-accent" />
@@ -588,7 +601,20 @@ const Home = () => {
 
       {/* ── App Download ──────────────────────────── */}
       <section className="w-screen relative left-[50%] right-[50%] -mx-[50vw] app-dl-bg py-16 overflow-hidden">
-        <div className="absolute inset-0 opacity-8">
+        <div className="absolute inset-0">
+          <img
+            src="https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=1600&h=900&fit=crop"
+            alt="App download background"
+            className="h-full w-full object-cover opacity-22 dark:opacity-14"
+            loading="lazy"
+          />
+          <div className="absolute inset-0 bg-linear-to-br from-white/88 via-white/78 to-white/62 dark:from-slate-950/94 dark:via-slate-950/84 dark:to-slate-900/94" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(226,98,73,0.14),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(59,130,246,0.10),transparent_24%)] dark:bg-[radial-gradient(circle_at_top_left,rgba(226,98,73,0.22),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(59,130,246,0.16),transparent_24%)]" />
+        </div>
+        <div className="absolute top-8 left-8 h-28 w-28 rounded-full bg-white/20 blur-3xl dark:bg-accent/10" />
+        <div className="absolute bottom-8 right-8 h-36 w-36 rounded-full bg-white/20 blur-3xl dark:bg-accent/10" />
+        <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-white/50 to-transparent dark:via-white/15" />
+        <div className="absolute inset-0 opacity-8 dark:opacity-10">
           <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
             <defs>
               <pattern id="food-p" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
@@ -604,14 +630,14 @@ const Home = () => {
         <div className="mx-auto max-w-7xl px-4 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
-              <span className="inline-block text-xs font-bold uppercase tracking-widest text-accent px-3 py-1.5 rounded-full bg-accent-10">
+              <span className="inline-block text-xs font-bold uppercase tracking-widest text-accent px-3 py-1.5 rounded-full bg-white/55 border border-white/50 shadow-sm backdrop-blur-md dark:bg-white/10 dark:border-white/10">
                 📱 Mobile App
               </span>
-              <h2 className="font-display text-4xl md:text-5xl font-bold text-heading leading-tight">
+              <h2 className="font-display text-4xl md:text-5xl font-bold text-gray-900 leading-tight dark:text-white">
                 Download The FoodNest App!
               </h2>
-              <p className="text-lg text-muted">
-                Get <span className="font-bold text-heading">5% off</span> on your first order through the app.
+              <p className="text-lg text-gray-800 dark:text-gray-300">
+                Get <span className="font-bold text-gray-900 dark:text-white">5% off</span> on your first order through the app.
               </p>
               <div className="flex flex-wrap gap-3 pt-2">
                 {[
@@ -619,7 +645,7 @@ const Home = () => {
                   { href: "https://play.google.com/store", label: "Google Play", sub: "GET IT ON" },
                 ].map(a => (
                   <a key={a.label} href={a.href} target="_blank" rel="noopener noreferrer"
-                    className="inline-flex items-center bg-gray-900 text-white px-5 py-3 rounded-xl hover:bg-gray-800 transition-all shadow-md hover:shadow-xl hover:-translate-y-0.5">
+                    className="inline-flex items-center bg-gray-900 text-white px-5 py-3 rounded-xl hover:bg-gray-800 transition-all shadow-md hover:shadow-xl hover:-translate-y-0.5 dark:bg-white dark:text-gray-900 dark:hover:bg-white/90">
                     <div className="text-left">
                       <div className="text-xs opacity-70">{a.sub}</div>
                       <div className="text-base font-bold">{a.label}</div>
@@ -691,23 +717,56 @@ const Home = () => {
       </Reveal>
 
       {/* ── Statistics ────────────────────────────── */}
-      <section className="w-screen relative left-1/2 right-1/2 -mx-[50vw] stats-bg py-20 overflow-hidden">
-        <div className="absolute top-10 right-10 w-32 h-32 bg-white/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-10 left-10 w-40 h-40 bg-white/10 rounded-full blur-3xl" />
+      <section className="w-screen relative left-1/2 right-1/2 -mx-[50vw] stats-bg dark:bg-slate-900 py-20 overflow-hidden transition-colors duration-300">
+        <div className="absolute inset-0">
+          <img
+            src="https://images.unsplash.com/photo-1547592180-85f173990554?w=1600&h=900&fit=crop"
+            alt="Food ingredients background"
+            className="h-full w-full object-cover opacity-18 dark:opacity-12"
+            loading="lazy"
+          />
+          <div className="absolute inset-0 bg-linear-to-br from-white/85 via-white/70 to-white/55 dark:from-slate-950/92 dark:via-slate-950/82 dark:to-slate-900/92" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(226,98,73,0.16),transparent_32%),radial-gradient(circle_at_bottom_left,rgba(59,130,246,0.12),transparent_28%)] dark:bg-[radial-gradient(circle_at_top_right,rgba(226,98,73,0.22),transparent_32%),radial-gradient(circle_at_bottom_left,rgba(59,130,246,0.18),transparent_28%)]" />
+        </div>
+        <div className="absolute top-10 right-10 w-32 h-32 bg-white/15 dark:bg-accent/8 rounded-full blur-3xl" />
+        <div className="absolute bottom-10 left-10 w-40 h-40 bg-white/15 dark:bg-accent/8 rounded-full blur-3xl" />
+
         <div className="mx-auto max-w-7xl px-4 relative z-10">
+          <div className="mx-auto mb-6 flex w-fit items-center gap-2 rounded-full border border-white/30 bg-white/40 px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-accent shadow-sm backdrop-blur-md dark:border-white/10 dark:bg-white/10">
+            <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />
+            Live Community Snapshot
+          </div>
           <div className="text-center mb-14 space-y-4">
-            <p className="text-xs font-bold uppercase tracking-widest text-accent">By The Numbers</p>
-            <h2 className="font-display text-4xl md:text-6xl font-extrabold text-gray-900 leading-tight">
+            <p className="text-xs font-bold uppercase tracking-widest text-accent drop-shadow-sm">
+              By The Numbers
+            </p>
+            <h2 className="font-display text-4xl md:text-6xl font-extrabold text-gray-900 dark:text-white leading-tight drop-shadow-[0_2px_18px_rgba(0,0,0,0.28)]">
               Join Our Growing <span className="text-accent">Food Community</span>
             </h2>
-            <p className="text-gray-800 text-lg max-w-2xl mx-auto">
+            <p className="text-gray-800 dark:text-gray-300 text-lg max-w-2xl mx-auto">
               Discover authentic local flavors and connect with passionate food lovers.
             </p>
           </div>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <StatCard label="Happy Customers" value="12500+" icon="😊" gradient="from-orange-400 to-red-400" />
-            <StatCard label="Food Items Listed" value="3850"  icon="🍽️" gradient="from-blue-400 to-indigo-400" />
-            <StatCard label="Reviews Posted"    value="25000+" icon="⭐" gradient="from-green-400 to-emerald-400" />
+      <StatCard 
+        label="Happy Customers" 
+        value="12500+" 
+        icon="😊" 
+        gradient="from-orange-400 to-red-400" 
+      />
+      <StatCard 
+        label="Food Items Listed" 
+        value="3850"  
+        icon="🍽️" 
+        gradient="from-blue-400 to-indigo-400" 
+      />
+      <StatCard 
+        label="Reviews Posted"    
+        value="25000+" 
+        icon="⭐" 
+        gradient="from-green-400 to-emerald-400" 
+      />
           </div>
         </div>
       </section>
