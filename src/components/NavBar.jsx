@@ -68,7 +68,7 @@ const NavBar = () => {
             </svg>
           </button>
           <Link to="/" onClick={closeMobileNav} className="flex items-center gap-2.5">
-            <img className="w-11" src="/lo.png" alt="FoodNest logo" />
+            <img className="w-32" src="/lo.png" alt="FoodNest logo" />
             <span className="text-xl font-extrabold tracking-tight md:text-[26px]"
               style={{ color: "rgb(226,98,73)" }}>
               FoodNest

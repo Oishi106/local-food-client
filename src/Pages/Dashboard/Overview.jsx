@@ -9,9 +9,8 @@ import { DashboardDataContext } from "../../context/DashboardDataContext";
 import { useUserRole } from "../../hooks/useUserRole";
 import { apiFetch } from "../../utils/api";
 import {
-  IoReceiptOutline, IoPeopleOutline, IoCardOutline,
-  IoStarOutline, IoRestaurantOutline, IoTrendingUpOutline,
-  IoTimeOutline
+  IoPeopleOutline, IoStarOutline, IoRestaurantOutline,
+  IoTimeOutline, IoHeartOutline, IoAddOutline, IoListOutline
 } from "react-icons/io5";
 
 const BRAND = "rgb(226,98,73)";
@@ -91,20 +90,20 @@ export default function Overview() {
   const adminCards = useMemo(() => {
     const s = metrics || {};
     return [
-      { label: "Total Bookings", value: s.totalBookings ?? "—", icon: <IoReceiptOutline size={22} />, color: BRAND },
-      { label: "Food Items", value: s.totalServices ?? "—", icon: <IoRestaurantOutline size={22} />, color: "#6366f1" },
-      { label: "Registered Users", value: s.totalUsers ?? "—", icon: <IoPeopleOutline size={22} />, color: "#10b981" },
-      { label: "Revenue (৳)", value: s.revenue ?? "—", icon: <IoCardOutline size={22} />, color: "#D4AF37" },
+      { label: "Community Reviews", value: s.totalBookings ?? "—", icon: <IoStarOutline size={22} />, color: BRAND },
+      { label: "Food Listings", value: s.totalServices ?? "—", icon: <IoRestaurantOutline size={22} />, color: "#6366f1" },
+      { label: "Members", value: s.totalUsers ?? "—", icon: <IoPeopleOutline size={22} />, color: "#10b981" },
+      { label: "Top Rated Reach", value: s.revenue ?? "—", icon: <IoHeartOutline size={22} />, color: "#D4AF37" },
     ];
   }, [metrics]);
 
   const userCards = useMemo(() => {
     const s = metrics || {};
     return [
-      { label: "My Bookings", value: s.totalBookings ?? "—", icon: <IoReceiptOutline size={22} />, color: BRAND },
-      { label: "My Reviews", value: s.totalServices ?? "—", icon: <IoStarOutline size={22} />, color: "#6366f1" },
-      { label: "Payments Made", value: s.totalUsers ?? "—", icon: <IoCardOutline size={22} />, color: "#10b981" },
-      { label: "Amount Spent (৳)", value: s.revenue ?? "—", icon: <IoTrendingUpOutline size={22} />, color: "#D4AF37" },
+      { label: "My Reviews", value: s.totalBookings ?? "—", icon: <IoStarOutline size={22} />, color: BRAND },
+      { label: "Foods Reviewed", value: s.totalServices ?? "—", icon: <IoRestaurantOutline size={22} />, color: "#6366f1" },
+      { label: "Community Members", value: s.totalUsers ?? "—", icon: <IoPeopleOutline size={22} />, color: "#10b981" },
+      { label: "Saved Favorites", value: s.revenue ?? "—", icon: <IoHeartOutline size={22} />, color: "#D4AF37" },
     ];
   }, [metrics]);
 
@@ -157,8 +156,8 @@ export default function Overview() {
         {/* Bar chart */}
         <div className="bg-base-100 rounded-2xl border border-base-200 p-5 animate-fade-in-up stagger-3">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="font-semibold text-base">Performance Overview</h2>
-            <span className="text-xs opacity-40">Updates on changes</span>
+            <h2 className="font-semibold text-base">Review Activity</h2>
+            <span className="text-xs opacity-40">Community engagement</span>
           </div>
           <div className="h-64 w-full">
             {chartData.length === 0 ? (
@@ -173,8 +172,8 @@ export default function Overview() {
                   <YAxis tick={{ fontSize: 12, opacity: 0.6 }} axisLine={false} tickLine={false} />
                   <Tooltip content={<CUSTOM_TOOLTIP />} cursor={{ fill: "rgba(0,0,0,0.04)" }} />
                   <Legend wrapperStyle={{ fontSize: "12px", paddingTop: "12px" }} />
-                  <Bar dataKey="revenue" name="Revenue" fill={BRAND} radius={[6, 6, 0, 0]} />
-                  <Bar dataKey="bookings" name="Bookings" fill="#6366f1" radius={[6, 6, 0, 0]} />
+                  <Bar dataKey="revenue" name="Community Reach" fill={BRAND} radius={[6, 6, 0, 0]} />
+                  <Bar dataKey="bookings" name="Reviews" fill="#6366f1" radius={[6, 6, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             )}
@@ -184,7 +183,7 @@ export default function Overview() {
         {/* Area chart */}
         <div className="bg-base-100 rounded-2xl border border-base-200 p-5 animate-fade-in-up stagger-4">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="font-semibold text-base">Revenue Trend</h2>
+            <h2 className="font-semibold text-base">Review Trend</h2>
             <span className="text-xs opacity-40">All time</span>
           </div>
           <div className="h-64 w-full">
@@ -208,7 +207,7 @@ export default function Overview() {
                   <Area
                     type="monotone"
                     dataKey="revenue"
-                    name="Revenue"
+                    name="Review Activity"
                     stroke={BRAND}
                     strokeWidth={2.5}
                     fill="url(#revGrad)"
@@ -243,11 +242,14 @@ export default function Overview() {
               <a href="/all-items" className="px-4 py-2 rounded-xl text-sm font-semibold border border-base-200 hover:bg-base-200/70 transition-colors flex items-center gap-2">
                 <IoRestaurantOutline size={16} /> Browse Foods
               </a>
-              <a href="/dashboard/bookings" className="px-4 py-2 rounded-xl text-sm font-semibold border border-base-200 hover:bg-base-200/70 transition-colors flex items-center gap-2">
-                <IoReceiptOutline size={16} /> My Bookings
+              <a href="/dashboard/reviews/add" className="px-4 py-2 rounded-xl text-sm font-semibold border border-base-200 hover:bg-base-200/70 transition-colors flex items-center gap-2">
+                <IoAddOutline size={16} /> Write Review
               </a>
               <a href="/dashboard/reviews" className="px-4 py-2 rounded-xl text-sm font-semibold border border-base-200 hover:bg-base-200/70 transition-colors flex items-center gap-2">
                 <IoStarOutline size={16} /> My Reviews
+              </a>
+              <a href="/dashboard/favourites" className="px-4 py-2 rounded-xl text-sm font-semibold border border-base-200 hover:bg-base-200/70 transition-colors flex items-center gap-2">
+                <IoHeartOutline size={16} /> My Favourites
               </a>
             </>
           )}

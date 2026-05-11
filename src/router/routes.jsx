@@ -16,8 +16,6 @@ import MyReviews from "../Pages/MyReviews/MyReviews";
 import MyFavourites from "../Pages/MyFavourites/MyFavourites";
 import About from "../Pages/About/About";
 import Overview from "../Pages/Dashboard/Overview";
-import MyBookings from "../Pages/Dashboard/MyBookings";
-import PaymentHistory from "../Pages/Dashboard/PaymentHistory";
 import MyReviewsDashboard from "../Pages/Dashboard/MyReviewsDashboard";
 import AddReviews from "../Pages/AddReviews/AddReviews";
 import UpdateReview from "../Pages/UpdateReview/UpdateReview";
@@ -40,7 +38,7 @@ export const router = createBrowserRouter([
       {
         path: "*",
         element: <ErrorPage></ErrorPage>,
-      },
+      },
       {
         path: "/all-items",
         element: <AllItems></AllItems>,
@@ -129,22 +127,6 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "/dashboard/bookings",
-        element: (
-          <RoleRoute allow={["user"]}>
-            <MyBookings />
-          </RoleRoute>
-        ),
-      },
-      {
-        path: "/dashboard/payments",
-        element: (
-          <RoleRoute allow={["user"]}>
-            <PaymentHistory />
-          </RoleRoute>
-        ),
-      },
-      {
         path: "/dashboard/reviews",
         element: (
           <RoleRoute allow={["user"]}>
@@ -157,6 +139,14 @@ export const router = createBrowserRouter([
         element: (
           <RoleRoute allow={["user"]}>
             <AddReviews />
+          </RoleRoute>
+        ),
+      },
+      {
+        path: "/dashboard/favourites",
+        element: (
+          <RoleRoute allow={["user"]}>
+            <MyFavourites />
           </RoleRoute>
         ),
       },

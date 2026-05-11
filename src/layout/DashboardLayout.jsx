@@ -4,20 +4,18 @@ import { AuthContext } from "../context/AuthContext";
 import { useUserRole } from "../hooks/useUserRole";
 import DashboardDataProvider from "../context/DashboardDataContext";
 import {
-  IoHomeOutline, IoReceiptOutline, IoCardOutline,
-  IoStarOutline, IoPeopleOutline, IoRestaurantOutline,
+  IoHomeOutline, IoStarOutline, IoPeopleOutline, IoRestaurantOutline,
   IoListOutline, IoLogOutOutline, IoMenuOutline,
-  IoHeartOutline,
-  IoMoonOutline, IoSunnyOutline, IoChevronForwardOutline
+  IoMoonOutline, IoSunnyOutline, IoChevronForwardOutline,
+  IoHeartOutline, IoAddOutline, IoPencilOutline
 } from "react-icons/io5";
 import { FaShieldAlt } from "react-icons/fa";
 
 const NAV_ICONS = {
   "Overview": <IoHomeOutline size={18} />,
-  "My Bookings": <IoReceiptOutline size={18} />,
-  "Payment History": <IoCardOutline size={18} />,
   "My Reviews": <IoStarOutline size={18} />,
-  "My Favourite": <IoHeartOutline size={18} />,
+  "Write Review": <IoAddOutline size={18} />,
+  "My Favourites": <IoHeartOutline size={18} />,
   "Manage Users": <IoPeopleOutline size={18} />,
   "Manage Products": <IoRestaurantOutline size={18} />,
   "All Bookings": <IoListOutline size={18} />,
@@ -40,10 +38,9 @@ export default function DashboardLayout() {
   const menuItems = useMemo(() => {
     const userItems = [
       { to: "/dashboard/overview", label: "Overview" },
-      { to: "/dashboard/bookings", label: "My Bookings" },
-      { to: "/dashboard/payments", label: "Payment History" },
       { to: "/dashboard/reviews", label: "My Reviews" },
-      { to: "/dashboard/favourites", label: "My Favourite" },
+      { to: "/dashboard/reviews/add", label: "Write Review" },
+      { to: "/dashboard/favourites", label: "My Favourites" },
     ];
     const adminItems = [
       { to: "/dashboard/overview", label: "Overview" },
