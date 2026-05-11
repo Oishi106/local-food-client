@@ -1,7 +1,9 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
-import { IoHeartOutline, IoHeart, IoLocationOutline, IoStarSharp, IoRestaurantOutline } from "react-icons/io5";
+import {
+  IoHeart, IoHeartOutline, IoLocationOutline,
+  IoStarSharp, IoRestaurantOutline
+} from "react-icons/io5";
 
 const BRAND = "rgb(226,98,73)";
 const LS_KEY = "fn_favourites";
@@ -12,10 +14,14 @@ const getFavs = () => {
 };
 
 export default function MyFavourites() {
-  const { user } = useContext(AuthContext);
-  const [favs, setFavs] = useState([]);
+  const [favs, setFavs] = useState(getFavs);
 
-  useEffect(() => { setFavs(getFavs()); }, []);
+  // Sync if user opens multiple tabs
+  useEffect(() => {
+    const handler = () => setFavs(getFavs());
+    window.addEventListener("storage", handler);
+    return () => window.removeEventListener("storage", handler);
+  }, []);
 
   const remove = (id) => {
     const next = favs.filter(f => f._id !== id);
@@ -25,6 +31,7 @@ export default function MyFavourites() {
 
   return (
     <div className="space-y-5">
+
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3 animate-fade-in-up">
         <div className="flex items-center gap-3">
@@ -43,12 +50,13 @@ export default function MyFavourites() {
         </Link>
       </div>
 
+      {/* Empty state */}
       {favs.length === 0 ? (
         <div className="bg-base-100 rounded-2xl border border-base-200 p-14 text-center animate-fade-in-up stagger-1">
           <div className="text-5xl mb-4">❤️</div>
           <div className="font-bold text-base mb-1">No favourites yet</div>
           <p className="text-sm text-muted mb-5">
-            Like a food item while browsing to save it here.
+            Click the <span className="font-bold">❤️ heart</span> on any food card to save it here.
           </p>
           <Link to="/all-items"
             className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-bold text-white"
@@ -63,6 +71,7 @@ export default function MyFavourites() {
             return (
               <div key={item._id}
                 className="group bg-base-100 rounded-2xl border border-base-200 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden relative">
+
                 <div className="absolute inset-x-0 top-0 h-0.5 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"
                   style={{ background: BRAND }} />
 
@@ -76,31 +85,34 @@ export default function MyFavourites() {
                   )}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
 
-                  {/* Rating on image */}
+                  {/* Rating */}
                   <div className="absolute bottom-3 left-3 flex items-center gap-1 px-2.5 py-1 rounded-full bg-black/50 backdrop-blur text-white text-xs font-bold">
                     <IoStarSharp size={11} className="text-amber-400" />
                     {stars > 0 ? stars.toFixed(1) : "New"}
                   </div>
 
-                  {/* Remove heart */}
-                  <button
-                    type="button"
-                    onClick={() => remove(item._id)}
-                    className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/40 backdrop-blur flex items-center justify-center hover:bg-red-500 transition-colors"
+                  {/* Remove button */}
+                  <button type="button" onClick={() => remove(item._id)}
                     title="Remove from favourites"
-                  >
-                    <IoHeart size={15} className="text-red-400 hover:text-white" />
+                    className="absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
+                    style={{ background: "rgba(239,68,68,0.85)", border: "1px solid rgba(239,68,68,0.5)" }}>
+                    <IoHeart size={15} className="text-white" />
                   </button>
                 </div>
 
                 <div className="p-4 flex flex-col gap-2.5">
-                  <h3 className="font-bold text-base text-heading line-clamp-1">{item.food_name || "—"}</h3>
+                  <h3 className="font-bold text-base text-heading line-clamp-1">
+                    {item.food_name || "—"}
+                  </h3>
 
                   <div className="flex items-center gap-0.5">
                     {Array.from({ length: 5 }).map((_, i) => (
                       <IoStarSharp key={i} size={12}
                         className={i < Math.floor(stars) ? "text-amber-400" : "text-base-200"} />
                     ))}
+                    {stars > 0 && (
+                      <span className="ml-1.5 text-[11px] text-muted font-medium">{stars.toFixed(1)}</span>
+                    )}
                   </div>
 
                   <div className="flex flex-wrap gap-1.5">
@@ -118,7 +130,9 @@ export default function MyFavourites() {
                   </div>
 
                   {item.review_text && (
-                    <p className="text-xs text-muted leading-relaxed line-clamp-2 italic">"{item.review_text}"</p>
+                    <p className="text-xs text-muted leading-relaxed line-clamp-2 italic">
+                      "{item.review_text}"
+                    </p>
                   )}
 
                   <div className="h-px bg-base-200" />
