@@ -40,6 +40,7 @@ const Footer = () => {
         <div className="grid gap-10 lg:grid-cols-[1.2fr_0.9fr_0.9fr_0.9fr]">
           <div className="space-y-5">
             <div className="inline-flex items-center gap-2 rounded-full border border-(--border) bg-white/80 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-[rgb(226,98,73)] shadow-sm backdrop-blur dark:bg-(--surface-2)">
+              <img src="/lo.png" alt="FoodNest logo" className="h-4 w-auto object-contain" />
               FoodNest
             </div>
             <h3 className="max-w-sm text-3xl font-extrabold leading-tight text-(--text-primary) md:text-4xl">

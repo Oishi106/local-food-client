@@ -52,10 +52,10 @@ const Registration = () => {
 
       <div className="relative z-10 mx-auto grid min-h-[calc(100vh-80px)] w-full max-w-6xl items-center gap-8 px-4 py-8 lg:grid-cols-[0.95fr_1.05fr] lg:px-6">
         <div className="order-2 lg:order-1">
-          <div className="rounded-[2rem] border border-base-200/70 bg-white/80 p-5 shadow-[0_24px_70px_rgba(0,0,0,0.12)] backdrop-blur-xl dark:bg-[rgba(24,20,16,0.88)] sm:p-8">
+          <div className="rounded-4xl border border-base-200/70 bg-white/80 p-5 shadow-[0_24px_70px_rgba(0,0,0,0.12)] backdrop-blur-xl dark:bg-[rgba(24,20,16,0.88)] sm:p-8">
             <div className="mb-8 text-center lg:text-left">
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[rgba(226,98,73,0.18)] bg-white/70 px-4 py-2 text-xs font-bold uppercase tracking-[0.24em] text-[rgb(226,98,73)] shadow-sm backdrop-blur dark:bg-[rgba(24,20,16,0.75)]">
-                <IoSparklesOutline size={14} /> Create account
+                <img src="/lo.png" alt="FoodNest logo" className="h-4 w-auto object-contain" /> Create account
               </div>
               <h1 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">Join FoodNest</h1>
               <p className="mt-2 text-sm text-muted sm:text-base">
@@ -120,7 +120,7 @@ const Registration = () => {
         </div>
 
         <div className="order-1 lg:order-2">
-          <div className="relative overflow-hidden rounded-[2rem] border border-white/40 bg-black/10 shadow-[0_30px_80px_rgba(0,0,0,0.12)]">
+          <div className="relative overflow-hidden rounded-4xl border border-white/40 bg-black/10 shadow-[0_30px_80px_rgba(0,0,0,0.12)]">
             <img
               src="/login.jpg"
               alt="Food inspiration"

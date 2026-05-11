@@ -85,7 +85,7 @@ const Login = () => {
 
         <div className="order-1 lg:order-2">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[rgba(226,98,73,0.18)] bg-white/70 px-4 py-2 text-xs font-bold uppercase tracking-[0.24em] text-[rgb(226,98,73)] shadow-sm backdrop-blur dark:bg-[rgba(24,20,16,0.75)]">
-            <IoRestaurantOutline size={14} /> Welcome back
+            <img src="/lo.png" alt="FoodNest logo" className="h-4 w-auto object-contain" /> Welcome back
           </div>
 
           <div className="rounded-[2rem] border border-base-200/70 bg-white/80 p-5 shadow-[0_24px_70px_rgba(0,0,0,0.12)] backdrop-blur-xl dark:bg-[rgba(24,20,16,0.88)] sm:p-8">
