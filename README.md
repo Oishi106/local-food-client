@@ -1,4 +1,4 @@
-## 🍽️ Local Food Lovers Network
+## 🍽️ FoodNest - Local Food Lovers Network
 
 A community-driven MERN platform where food lovers can share their local food experiences, post reviews with photos, discover trending dishes, and connect with nearby food enthusiasts.
 
