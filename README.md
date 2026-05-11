@@ -1,8 +1,8 @@
-## 🍽️ Local Food Lovers Network
+## 🍽️ FoodNest - Local Food Lovers Network
 
 A community-driven MERN platform where food lovers can share their local food experiences, post reviews with photos, discover trending dishes, and connect with nearby food enthusiasts.
 
-## 🌐 Live Site: https://ornate-sunshine-8ba480.netlify.app/
+## 🌐 Live Site: https://local-food-client.vercel.app/
 
 ## 🖼️ Project Overview
 

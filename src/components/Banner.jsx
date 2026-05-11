@@ -4,4 +4,4 @@ const Banner = () => {
   return <HeroCarousel />;
 };                                         
 
-export default Banner;
+export default Banner;                   
