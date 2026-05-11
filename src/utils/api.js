@@ -1,6 +1,6 @@
 // ─── Base URL ────────────────────────────────────────────────
-// frontend .env এ রাখো: VITE_API_URL=http://localhost:3000
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+// frontend .env এ রাখো: VITE_API_URL=https://local-food-server.onrender.com
+const BASE_URL = import.meta.env.VITE_API_URL || "https://local-food-server.onrender.com";
 
 // ─── Token helpers ───────────────────────────────────────────
 export const saveToken  = (token) => localStorage.setItem("fn_token", token);

@@ -24,7 +24,7 @@ const AllItems = () => {
     setError(null);
     setHasSearched(true);
 
-    fetch(`http://localhost:3000/search?search=${encodeURIComponent(search_text)}`)
+    fetch(`https://local-food-server.onrender.com/search?search=${encodeURIComponent(search_text)}`)
       .then(res => {
         if (!res.ok) throw new Error("Search failed");
         return res.json();

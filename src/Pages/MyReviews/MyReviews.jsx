@@ -8,7 +8,7 @@ const MyReviews = () => {
 
     useEffect(()=> {
 
-        fetch(`http://localhost:3000/my-reviews?email=${user.email}`)
+        fetch(`https://local-food-server.onrender.com/my-reviews?email=${user.email}`)
         .then(res=> res.json())
         .then(data=> {
             setItems(data)

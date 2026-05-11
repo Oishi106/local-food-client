@@ -59,7 +59,7 @@ Local Food Lovers Network is a full-stack web application designed for food enth
 
 ## ⚙️ Environment
 
-- `VITE_API_BASE_URL` (optional): backend base URL (default: `http://localhost:3000`)
+- `VITE_API_BASE_URL` (optional): backend base URL (default: `https://local-food-server.onrender.com`)
 
 ## 🔌 Dashboard API expectations
 
